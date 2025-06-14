@@ -4,30 +4,38 @@ import Model.Response;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+
+// FUNDAMENTAL --> Esta clase DAO la van a implementar las clases que se involucren con la BBDD (user y review),
+// ya que las otras clases no van a necesitarlo porque van a consumir la API.
+
 
 // Clase abstracta que implementa el patron DAO (Data Access Object)
 // Se encarga de definir operaciones basicas (CRUD) para interactuar con la base de datos
 // Utiliza un tipo generico <T> que sera definido por las subclases concretas
-public abstract class DAO<T> {
+public abstract class BaseDAO<T> implements ICrud<T>{
 
     protected  Connection conn;
 
     // Con este metodo recibe la conexion por paramentro y la setea en conn
-    public DAO(Connection conn) {
+    public BaseDAO(Connection conn) {
         this.conn = conn;
     }
 
     // Metodos abstractos para operaciones CRUD que deben ser implementados por las subclases.
     // Devuelvo la clase response que la diseñe para devolver una respuesta especializada para cada metodo
-    public abstract Response<T> create(T o) throws SQLException;
+    @Override
+    public abstract Response<T> Create(T o);
 
-    public abstract Response<T> Update(T o) throws SQLException;
+    @Override
+    public abstract Response<T> Update(T o);
 
-    public abstract Response<T> delete(int id) throws SQLException;
+    @Override
+    public abstract Response<T> delete(int id);
 
-    public abstract Response<T> Read(int id) throws SQLException;
+    @Override
+    public abstract Response<T> Read(int id);
 
-    public abstract Response<T>  ReadAll() throws SQLException;
-
-
+    @Override
+    public abstract Response<T> ReadAll();
 }

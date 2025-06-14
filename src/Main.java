@@ -14,6 +14,8 @@ public class Main {
             ConnectionDB instance = ConnectionDB.getInstance();
 
             Connection connection = instance.getConnection();
+
+            System.out.println("Connected to database.");
         }catch (Exception e){
             JOptionPane.showMessageDialog(null,e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }

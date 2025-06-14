@@ -7,11 +7,11 @@ import java.sql.SQLException;
 // Las anotaciones me sirven a mi para entender mejor mi codigo :)
 public class ConnectionDB {
 
-    // Variables para establecer la conexion a la BBDD
-    private String url = "jdbc:h2:~/test";
-    private String driver_db = "org.h2.Driver";
-    private String username = "sa";
-    private String password = "";
+    // Variables para establecer la conexion a la BBDD, van en final porque no van a ser modificadas
+    private final String url = "jdbc:h2:~/test";
+    private final String driver_db = "org.h2.Driver";
+    private final String username = "sa";
+    private final String password = "";
 
     // Instancia unica (patron singleton)
     private static ConnectionDB instance;
