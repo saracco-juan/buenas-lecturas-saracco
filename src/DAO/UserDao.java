@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+//Clase que hereda de baseDAO
 public class UserDao extends BaseDAO<User> {
 
     // Acceso a la conexion a traves del constructor del padre (BaseDAO)
@@ -21,7 +22,7 @@ public class UserDao extends BaseDAO<User> {
 
     // Metodo para insertar un nuevo usuario en la BBDD. Recibe un usuario 'o'.
     @Override
-    public Response<User> Create(User o) {
+    public Response<User> create(User o) {
 
         //Lo primero que hice fue crear la consulta SQL (sin los datos ("VALUES"))
         String sql = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
@@ -31,7 +32,7 @@ public class UserDao extends BaseDAO<User> {
             //Creo un nuevo objeto PreparedStatement y le paso por parametro la query
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            //Ahora si seteo los valors deseados
+            //Ahora si seteo los valores deseados
             ps.setString(1, o.getName());
             ps.setString(2, o.getEmail());
             ps.setString(3, o.getPassword());
@@ -53,7 +54,7 @@ public class UserDao extends BaseDAO<User> {
     }
 
     @Override
-    public Response<User> Update(User o){
+    public Response<User> update(User o){
 
         String sql = "UPDATE user SET name = ?, email = ?, password = ? WHERE id = ?";
 
@@ -65,6 +66,7 @@ public class UserDao extends BaseDAO<User> {
             ps.setString(2, o.getEmail());
             ps.setString(3, o.getPassword());
 
+            //Actualizamos el statement y lo ejecuta. Se utiliza executeUpdate ya que es uno de estos -> insert/update/delete.
             ps.executeUpdate();
 
             return new Response<>( "Usuario actualizado correctamente", "200", true);
@@ -96,7 +98,7 @@ public class UserDao extends BaseDAO<User> {
     }
 
     @Override
-    public Response<User> Read(int id){
+    public Response<User> read(int id){
 
         String sql = "SELECT * FROM user WHERE id = ?";
         User userFound = null;
@@ -131,7 +133,7 @@ public class UserDao extends BaseDAO<User> {
     }
 
     @Override
-    public Response<User> ReadAll() {
+    public Response<List<User>> readAll() {
 
             String sql = "SELECT * FROM user";
             User userFound = null;
@@ -154,12 +156,46 @@ public class UserDao extends BaseDAO<User> {
                     usersFound.add(userFound);
                 }
 
-                return new Response<>("Lista de usuarios encontrada correctamente", "200", true, usersFound);
+                return new Response<List<User>>("Lista de usuarios encontrada correctamente", "200", true, usersFound);
 
             }catch (SQLException e){
                 return new Response<>("Error al obtener la lista de usuarios: " + e.getMessage(), "500", false);
             }
 
         }
+
+    public Response<User> findByEmail(String email){
+        String sql = "SELECT * FROM user WHERE email = ?";
+
+        User userFound = null;
+
+        try{
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, email);
+
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()){
+                userFound = new User(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+            }
+
+            if(userFound == null){
+                return new Response<>("Usuario no encontrado", "200", false);
+            }else{
+                return new Response<>("Usuario encontrado correctamente", "200", true, userFound);
+            }
+
+        }catch (SQLException e){
+            return new Response<>("Error al obtener el usuario: " + e.getMessage(), "500", false);
+        }
+    }
+
     }
 

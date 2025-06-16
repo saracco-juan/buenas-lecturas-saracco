@@ -11,7 +11,7 @@ public class User {
     private String password;
     private ArrayList<Book> readBooks;
     private ArrayList<Book> wantToRead;
-    private ArrayList<Author> favouriteAuthors;
+    private ArrayList<Author> suggestions;
 
 
     public User(int id, String name, String email, String password) {
@@ -19,6 +19,18 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    //Asi construyo mi objeto en el metodo register del servicio
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+
+        readBooks = new ArrayList<>();
+        wantToRead = new ArrayList<>();
+        suggestions = new ArrayList<>();
+
     }
 
     public int getId() {

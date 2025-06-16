@@ -25,17 +25,17 @@ public abstract class BaseDAO<T> implements ICrud<T>{
     // Metodos abstractos para operaciones CRUD que deben ser implementados por las subclases.
     // Devuelvo la clase response que la diseñe para devolver una respuesta especializada para cada metodo
     @Override
-    public abstract Response<T> Create(T o);
+    public abstract Response<T> create(T o);
 
     @Override
-    public abstract Response<T> Update(T o);
+    public abstract Response<T> update(T o);
 
     @Override
     public abstract Response<T> delete(int id);
 
     @Override
-    public abstract Response<T> Read(int id);
+    public abstract Response<T> read(int id);
 
     @Override
-    public abstract Response<T> ReadAll();
+    public abstract Response<List<T>> readAll();
 }
