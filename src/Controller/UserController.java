@@ -3,7 +3,6 @@ package Controller;
 import Model.Response;
 import Model.User;
 import Service.UserService;
-import Service.UserServiceImpl;
 
 //Esta clase se encarga de conectar la vista y el servicio
 public class UserController {
@@ -12,8 +11,8 @@ public class UserController {
     private final UserService userService;
 
     //Recibo la dependecia en el constructor y la seteo
-    public UserController(UserServiceImpl userServiceImpl) {
-        this.userService = userServiceImpl;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     //Recibe datos para login por parametro (que van a ser enviados desde la vista)

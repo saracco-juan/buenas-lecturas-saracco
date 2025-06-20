@@ -20,7 +20,7 @@ public class UserDao extends BaseDAO<User> {
 
     //Los primeros tres metodos son muy similares entre ellos
 
-    // Metodo para insertar un nuevo usuario en la BBDD. Recibe un usuario 'o'.
+    // Metodo para insertar un nuevo usuario en la BBDD. Recibe un usuario 'o'
     @Override
     public Response<User> create(User o) {
 
@@ -53,6 +53,7 @@ public class UserDao extends BaseDAO<User> {
 
     }
 
+    // Metodo para actualizar un usuario en la BBDD. Recibe un usuario 'o'
     @Override
     public Response<User> update(User o){
 
@@ -67,9 +68,19 @@ public class UserDao extends BaseDAO<User> {
             ps.setString(3, o.getPassword());
 
             //Actualizamos el statement y lo ejecuta. Se utiliza executeUpdate ya que es uno de estos -> insert/update/delete.
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
 
-            return new Response<>( "Usuario actualizado correctamente", "200", true);
+            if(rows > 0){
+                return new Response<>( "Usuario actualizado correctamente", "200", true);
+            }else{
+
+                if(rows == 0){
+                    return new Response<>("Error: No se encontro el usuario", "404", false);
+                }
+
+                return new Response<>("Error al actualizar", "500", false);
+            }
+
 
         }catch (SQLException e){
             return new Response<>( "Error al actualizar: " + e.getMessage(), "500", false);
@@ -77,6 +88,7 @@ public class UserDao extends BaseDAO<User> {
 
     }
 
+    // Metodo para eliminar un usuario de la BBDD. Recibe un id de usuario
     @Override
     public Response<User> delete(int id){
 
@@ -88,15 +100,21 @@ public class UserDao extends BaseDAO<User> {
 
             ps.setInt(1, id);
 
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
 
-            return new Response<>( "Usuario eliminado correctamente", "200", true);
+            if(rows == 1){
+                return new Response<>( "Usuario eliminado correctamente", "200", true);
+            }else{
+                return new Response<>("Error al eliminar", "500", false);
+            }
+
 
         }catch (SQLException e){
             return new Response<>( "Error al eliminar: " + e.getMessage(), "500", false);
         }
     }
 
+    // Metodo para leer un usuario de la BBDD. Recibe un id de usuario
     @Override
     public Response<User> read(int id){
 
@@ -132,6 +150,14 @@ public class UserDao extends BaseDAO<User> {
 
     }
 
+
+
+    //Me quede aca clase 27/05!!
+
+
+
+
+    // Metodo para leer todos los usuarios de la BBDD
     @Override
     public Response<List<User>> readAll() {
 
@@ -143,8 +169,10 @@ public class UserDao extends BaseDAO<User> {
 
                 PreparedStatement ps = conn.prepareStatement(sql);
 
+                //Armo el result set que devuelve el execute query (porque es un SELECT)
                 ResultSet rs = ps.executeQuery();
 
+                //Mientas haya un resultado en la fila, sigo ejecutando el while
                 while(rs.next()){
                     int userId = rs.getInt("id");
                     String name = rs.getString("name");
@@ -163,7 +191,7 @@ public class UserDao extends BaseDAO<User> {
             }
 
         }
-
+    //Metodo para buscar un usuario en la BBDD por email
     public Response<User> findByEmail(String email){
         String sql = "SELECT * FROM user WHERE email = ?";
 
