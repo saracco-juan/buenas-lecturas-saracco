@@ -25,7 +25,7 @@ public class UserDao extends BaseDAO<User> {
     public Response<User> create(User o) {
 
         //Lo primero que hice fue crear la consulta SQL (sin los datos ("VALUES"))
-        String sql = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO app_user (name, email, password) VALUES (?, ?, ?)";
 
         //Intento ejecutar la consulta (por eso va dentro de un try)
         try{
@@ -46,6 +46,8 @@ public class UserDao extends BaseDAO<User> {
         //En caso de fallar, atajo el error
         }catch (SQLException e){
 
+            System.out.println("Error al insertar el usuario -- JUAN");
+            e.printStackTrace();
             //Retorno el objeto response con un mensaje de error, codigo de error y false
             return new Response<>( "Error al insertar: " + e.getMessage(), "500", false);
 

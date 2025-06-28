@@ -28,7 +28,12 @@ public class Main {
             
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
-                    new Frame().setVisible(true);
+
+                    Frame mainFrame = new Frame(userController);
+
+                    userController.setView(mainFrame);
+
+                    mainFrame.setVisible(true);
                 }
         }); 
         }catch (Exception e){
