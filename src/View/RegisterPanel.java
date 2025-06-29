@@ -41,8 +41,18 @@ public class RegisterPanel extends javax.swing.JPanel {
         loginButon = new javax.swing.JButton();
 
         userEmail.setText("Email");
+        userEmail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                userEmailMouseClicked(evt);
+            }
+        });
 
         userPassword.setText("Contraseña");
+        userPassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                userPasswordMouseClicked(evt);
+            }
+        });
 
         registerButon.setLabel("Registrarse");
         registerButon.addActionListener(new java.awt.event.ActionListener() {
@@ -52,6 +62,11 @@ public class RegisterPanel extends javax.swing.JPanel {
         });
 
         userName.setText("Nombre");
+        userName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                userNameMouseClicked(evt);
+            }
+        });
 
         jTextField3.setEditable(false);
         jTextField3.setText("Ya tienes un usuario?");
@@ -108,6 +123,18 @@ public class RegisterPanel extends javax.swing.JPanel {
     private void loginButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButonActionPerformed
         mainFrame.showPanel("LOGIN_PANEL");
     }//GEN-LAST:event_loginButonActionPerformed
+
+    private void userNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userNameMouseClicked
+       userName.setText("");
+    }//GEN-LAST:event_userNameMouseClicked
+
+    private void userEmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userEmailMouseClicked
+        userEmail.setText("");
+    }//GEN-LAST:event_userEmailMouseClicked
+
+    private void userPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userPasswordMouseClicked
+        userPassword.setText("");
+    }//GEN-LAST:event_userPasswordMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

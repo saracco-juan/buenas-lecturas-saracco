@@ -89,12 +89,19 @@
         <Component class="javax.swing.JTextField" name="userEmail">
           <Properties>
             <Property name="text" type="java.lang.String" value="Email"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="userEmailMouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="userPassword">
           <Properties>
             <Property name="text" type="java.lang.String" value="Contrase&#xf1;a"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="userPasswordMouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextField3">
           <Properties>

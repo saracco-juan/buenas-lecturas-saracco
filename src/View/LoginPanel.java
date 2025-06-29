@@ -50,8 +50,19 @@ public class LoginPanel extends javax.swing.JPanel {
         });
 
         userEmail.setText("Email");
+        userEmail.setToolTipText("");
+        userEmail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                userEmailMouseClicked(evt);
+            }
+        });
 
         userPassword.setText("Contraseña");
+        userPassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                userPasswordMouseClicked(evt);
+            }
+        });
 
         jTextField3.setEditable(false);
         jTextField3.setText("No tienes usuario?");
@@ -122,6 +133,14 @@ public class LoginPanel extends javax.swing.JPanel {
 
        mainFrame.showPanel("REGISTER_PANEL");
     }//GEN-LAST:event_registerButonActionPerformed
+
+    private void userEmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userEmailMouseClicked
+      userEmail.setText("");
+    }//GEN-LAST:event_userEmailMouseClicked
+
+    private void userPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userPasswordMouseClicked
+      userPassword.setText("");
+    }//GEN-LAST:event_userPasswordMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

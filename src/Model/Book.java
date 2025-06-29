@@ -5,19 +5,25 @@ import Enum.Genre;
 
 public class Book {
 
-    private long ISBN;
+    private String ISBN;
     private String name;
-    private Author author;
+    private String authorName;
     private Genre genre;
     private String summary;
     private String numberOfPages;
     private Date publishDate;
     private String imageURL;
 
-    public Book(long ISBN, String name, Author author, Genre genre, String summary, String numberOfPages, Date publishDate, String imageURL) {
+    public Book(String ISBN, String name, String authorName){
         this.ISBN = ISBN;
         this.name = name;
-        this.author = author;
+        this.authorName = authorName;
+    }
+
+    public Book(String ISBN, String name, String authorName, Genre genre, String summary, String numberOfPages, Date publishDate, String imageURL) {
+        this.ISBN = ISBN;
+        this.name = name;
+        this.authorName = authorName;
         this.genre = genre;
         this.summary = summary;
         this.numberOfPages = numberOfPages;
@@ -25,7 +31,7 @@ public class Book {
         this.imageURL = imageURL;
     }
 
-    public void setISBN(long ISBN) {
+    public void setISBN(String ISBN) {
         this.ISBN = ISBN;
     }
 
@@ -33,8 +39,8 @@ public class Book {
         this.name = name;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthor(String author) {
+        this.authorName = authorName;
     }
 
     public void setGenre(Genre genre) {
@@ -57,7 +63,7 @@ public class Book {
         this.imageURL = imageURL;
     }
 
-    public long getISBN() {
+    public String getISBN() {
         return ISBN;
     }
 
@@ -65,8 +71,8 @@ public class Book {
         return name;
     }
 
-    public Author getAuthor() {
-        return author;
+    public String getAuthor() {
+        return authorName;
     }
 
     public Genre getGenre() {

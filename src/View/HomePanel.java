@@ -6,6 +6,9 @@
 package View;
 
 import Controller.UserController;
+import Model.Book;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,6 +26,32 @@ public class HomePanel extends javax.swing.JPanel {
         this.mainFrame = mainFrame;
         this.userController = userController;
     }
+    
+     public void showErrorMessage(String message) {
+        // El propio panel muestra el popup de error.
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+     
+     // ... dentro de la clase HomePanel ...
+
+
+    public void updateResultsList(List<Book> books) { // Le he puesto un nombre más descriptivo: "update"
+        // JList funciona mejor con un DefaultListModel
+     javax.swing.DefaultListModel<String> model = new javax.swing.DefaultListModel<>();
+    
+        if (books == null || books.isEmpty()) {
+            model.addElement("No se encontraron resultados para tu búsqueda.");
+        } else {
+            for (Book book : books) {
+                // Mostramos el título y el autor en la lista
+                model.addElement(book.getName() + " - " + book.getAuthor());
+            }
+        }
+    
+        // Asigna el nuevo modelo a tu JList.
+        // Asegúrate de que tu JList en el diseñador tenga el nombre de variable "resultsList".
+        resultsList.setModel(model); 
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -34,29 +63,80 @@ public class HomePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        buscarAutor = new javax.swing.JTextField();
+        searchButon = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        resultsList = new javax.swing.JList<>();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         jLabel1.setText("Bienvenido a Buenas Lecturas");
+
+        buscarAutor.setText("Buscar Autor");
+        buscarAutor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscarAutorMouseClicked(evt);
+            }
+        });
+
+        searchButon.setText("Buscar");
+
+        resultsList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(resultsList);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(128, 128, 128)
-                .addComponent(jLabel1)
-                .addContainerGap(129, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(buscarAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(searchButon, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(45, 45, 45)
                 .addComponent(jLabel1)
-                .addContainerGap(241, Short.MAX_VALUE))
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buscarAutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButon))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void buscarAutorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarAutorMouseClicked
+        this.buscarAutor.setText("");
+    }//GEN-LAST:event_buscarAutorMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField buscarAutor;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> resultsList;
+    private javax.swing.JButton searchButon;
     // End of variables declaration//GEN-END:variables
 }
