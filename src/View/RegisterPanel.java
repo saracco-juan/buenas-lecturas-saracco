@@ -13,10 +13,11 @@ import Controller.UserController;
  */
 public class RegisterPanel extends javax.swing.JPanel {
 
-    
+    //Dependencias con el main frame y el user controller
     private final Frame mainFrame;
     private final UserController userController;
     
+   //Constructor del panel
     public RegisterPanel(Frame mainFrame, UserController userController) {
         initComponents();
         this.mainFrame = mainFrame;

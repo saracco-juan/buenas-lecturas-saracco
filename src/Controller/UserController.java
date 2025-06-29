@@ -74,7 +74,7 @@ public class UserController {
         if(registerResponse.getStatus()){
             //System.out.println("Register exitoso. Bienvenido " +  registerResponse.getObj().getName());
             view.showSuccessMessage(registerResponse.getMessage());
-            view.navigateToHome(registerResponse.getObj());
+            view.navigateToLogin(registerResponse.getObj());
         }else{
             //System.out.println("Error de registro: " +  registerResponse.getMessage());
             view.showErrorMessage(registerResponse.getMessage());

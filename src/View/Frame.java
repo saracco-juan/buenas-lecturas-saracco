@@ -4,36 +4,40 @@ import Controller.UserController;
 import Model.User;
 import java.awt.CardLayout;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
+//Mi clase Frame utiliza la interfaz AuthView que tiene 
+//3 metodos que ayudan al flujo de las vistas
 public class Frame extends javax.swing.JFrame implements AuthView{
 
-    private CardLayout cardLayout;
-    private JPanel mainPanel;
+    //El card layout es el que se encarga de manejar las vistas
+    private final CardLayout cardLayout;
     
+    //paneles
     private LoginPanel loginPanel;
     private RegisterPanel registerPanel;
-
+    private HomePanel homePanel;
  
     
        public Frame(UserController userController) {
-        // NO llames a initComponents() aquí todavía, lo vamos a modificar.
 
-        // --- 1. Configuración básica del JFrame ---
+        //Configuracion básica del JFrame
         setTitle("Buenas Lecturas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // --- 2. Establecer el CardLayout en el Content Pane del Frame ---
+        //Estableci el CardLayout en el Content Pane del Frame
         cardLayout = new CardLayout();
         getContentPane().setLayout(cardLayout);
 
-        // --- 3. Crear los paneles (esto está bien) ---
+        //Instancio los paneles
         loginPanel = new LoginPanel(this, userController);
         registerPanel = new RegisterPanel(this, userController);
+        homePanel = new HomePanel(this, userController);
 
-        // --- 4. Añadir los paneles DIRECTAMENTE al Content Pane ---
+        //Añadi los paneles al contentPane
         getContentPane().add(loginPanel, "LOGIN_PANEL");
         getContentPane().add(registerPanel, "REGISTER_PANEL");
+        getContentPane().add(homePanel, "HOME_PANEL");
+
 
         // --- 5. Ajustar el tamaño del Frame y hacerlo visible ---
         pack(); // Ajusta el tamaño del Frame al tamaño preferido de sus componentes.
@@ -57,11 +61,34 @@ public class Frame extends javax.swing.JFrame implements AuthView{
         javax.swing.JOptionPane.showMessageDialog(this, message, "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }
 
+    //Metodo para navegar al home
     @Override
     public void navigateToHome(User user) {
+        //SYSO de test
         System.out.println("Navegando a la pantalla principal para el usuario: " + user.getName());
+        
+        //Accedo al metodo show panel y le paso el nombre del panel home
+        this.showPanel("HOME_PANEL");
     }
+    
+    
+    @Override
+    public void navigateToLogin(User user) {
+        //SYSO de test
+        System.out.println("Se registro el usuario correctamente " + user.getName());
+        
+        //Accedo al metodo show panel y le paso el nombre del panel home        
+        this.showPanel("LOGIN_PANEL");
+    } 
+    
+    
+    
 
+    
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -86,10 +113,6 @@ public class Frame extends javax.swing.JFrame implements AuthView{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-
-
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

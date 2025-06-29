@@ -37,11 +37,25 @@ public class UserDao extends BaseDAO<User> {
             ps.setString(2, o.getEmail());
             ps.setString(3, o.getPassword());
 
-            //Con esta linea se ejecuta la consulta guardada en ps
-            ps.executeUpdate();
+            //Con esta linea se ejecuta la consulta guardada en ps, lo guardo en una variable
+            int filasAfectadas = ps.executeUpdate();
 
-            //Retorno el objeto response con un mensaje de exito, codigo de exito y true
-            return new Response<>( "Usuario creado correctamente", "200", true);
+            //leo si hubo filas afectadas
+            if(filasAfectadas>0){
+
+                //Creo un result set con los nuevos ids generados por la BBDD
+                ResultSet idGenerado = ps.getGeneratedKeys();
+
+                //Leo la siguiente linea
+                if(idGenerado.next()){
+                    //En caso de haber un nuevo id se lo seteo al objeto user que pase por param
+                    int nuevoId = idGenerado.getInt(1);
+                    o.setId(nuevoId);
+                }
+            }
+
+            //Retorno el objeto response con un mensaje de exito, codigo de exito , true y el objeto que cree
+            return new Response<>( "Usuario creado correctamente", "200", true, o);
 
         //En caso de fallar, atajo el error
         }catch (SQLException e){
