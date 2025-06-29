@@ -209,7 +209,7 @@ public class UserDao extends BaseDAO<User> {
         }
     //Metodo para buscar un usuario en la BBDD por email
     public Response<User> findByEmail(String email){
-        String sql = "SELECT * FROM user WHERE email = ?";
+        String sql = "SELECT * FROM app_user WHERE email = ?";
 
         User userFound = null;
 
@@ -240,6 +240,5 @@ public class UserDao extends BaseDAO<User> {
             return new Response<>("Error al obtener el usuario: " + e.getMessage(), "500", false);
         }
     }
-
-    }
+}
 
