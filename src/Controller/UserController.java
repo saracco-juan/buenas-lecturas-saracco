@@ -5,6 +5,7 @@ import Model.Response;
 import Model.User;
 import Service.UserService;
 import View.AuthView;
+import View.HomeView;
 
 //Esta clase se encarga de conectar la vista y el servicio
 public class UserController {
@@ -13,6 +14,12 @@ public class UserController {
     private final UserService userService;
     //Genero la dependencai del autentificador de user
     private AuthView view;
+    private User loggedInUser;
+
+    // El Frame principal llamará a este método después de un login exitoso.
+    public void setLoggedInUser(User user) {
+        this.loggedInUser = user;
+    }
 
     //Recibo la dependecia en el constructor y la seteo
     public UserController(UserService userService) {
@@ -91,9 +98,37 @@ public class UserController {
 
         System.out.println("4. Controlador recibió respuesta del servicio. Estado: " + response.getStatus());
 
-        if(response.getStatus()){
+//        if(response.getStatus()){
+//            ((AuthView) view).showSuccessMessage(response.getMessage());
+//        }else{
+//            ((AuthView) view).showErrorMessage(response.getMessage());
+//        }
+
+        if (response.getStatus()) {
+            // --- INICIO DE LOS CAMBIOS ---
+
+            // 1. ACTUALIZAR EL MODELO EN MEMORIA
+            //    El objeto 'user' que tenemos aquí es el original, no el actualizado.
+            //    La forma más segura es añadir el libro directamente al 'loggedInUser' del controlador.
+            //    Si tu método de servicio devuelve el User actualizado en response.getData(), sería aún mejor.
+            //    Por ahora, lo añadimos manualmente.
+            if (this.loggedInUser != null) {
+                this.loggedInUser.getWantToRead().add(book);
+            }
+
+            // 2. NOTIFICAR A LA VISTA QUE SE REFRESQUE
+            //    Llamamos al mismo método que usamos para eliminar, para que el ProfilePanel se actualice.
+            //    Necesitamos castear 'view' a 'HomeView' para acceder a este método.
+            if (view instanceof HomeView) {
+                ((HomeView) view).refreshProfileView(this.loggedInUser);
+            }
+
+            // --- FIN DE LOS CAMBIOS ---
+
+            // Mostramos el mensaje de éxito al final.
             ((AuthView) view).showSuccessMessage(response.getMessage());
-        }else{
+
+        } else {
             ((AuthView) view).showErrorMessage(response.getMessage());
         }
 

@@ -23,10 +23,18 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     private LoginPanel loginPanel;
     private RegisterPanel registerPanel;
     private HomePanel homePanel;
+    private ProfilePanel profilePanel;
+    
     private BookController  bookController;
+    private final UserController userController;
+
  
     
        public Frame(UserController userController,  BookController bookController) {
+           
+        // Guardamos las referencias a los controladores
+        this.userController = userController;
+        this.bookController = bookController;
 
         initComponents();
 
@@ -42,11 +50,17 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
         loginPanel = new LoginPanel(this, userController);
         registerPanel = new RegisterPanel(this, userController);
         homePanel = new HomePanel(this, userController, bookController);
+        profilePanel = new ProfilePanel(this);
+        
+        profilePanel.setController(bookController);
 
         //Añadi los paneles al contentPane
         getContentPane().add(loginPanel, "LOGIN_PANEL");
         getContentPane().add(registerPanel, "REGISTER_PANEL");
         getContentPane().add(homePanel, "HOME_PANEL");
+        getContentPane().add(profilePanel, "PROFILE_PANEL");
+        
+
 
 
         // --- 5. Ajustar el tamaño del Frame y hacerlo visible ---
@@ -79,10 +93,15 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
         
         // 1. GUARDA EL USUARIO EN EL FRAME
          this.loggedInUser = user;
+         
+        // 2. Notifica a los controladores quién es el usuario activo
+        this.userController.setLoggedInUser(this.loggedInUser);
+        this.bookController.setLoggedInUser(this.loggedInUser);
     
-         // 2. PASA EL USUARIO AL HOMEPANEL
+         // 3. PASA EL USUARIO AL HOMEPANEL
          //    Ahora que tenemos el usuario, se lo damos al panel que lo necesita.
-             homePanel.setCurrentUser(this.loggedInUser);
+         homePanel.setCurrentUser(this.loggedInUser);
+         profilePanel.setCurrentUser(this.loggedInUser);
         
         //Accedo al metodo show panel y le paso el nombre del panel home
         this.showPanel("HOME_PANEL");
@@ -93,6 +112,20 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
        // El Frame recibe la orden, pero se la pasa al panel correcto.
         if (homePanel != null) {
             homePanel.updateResultsList(books);
+        }
+    }
+    
+    @Override
+    public void refreshProfileView(User updatedUser) {
+        System.out.println("Frame: Recibida orden para refrescar la vista del perfil.");
+        
+        // 1. Actualizamos la copia del usuario en el Frame. ¡MUY IMPORTANTE!
+        this.loggedInUser = updatedUser;
+        
+        // 2. Le decimos al ProfilePanel que se redibuje con la nueva información.
+        //    Reusamos el método que creamos para esto.
+        if (profilePanel != null) {
+            profilePanel.refreshView(updatedUser);
         }
     }
     
@@ -138,6 +171,7 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
 
 
 

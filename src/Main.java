@@ -1,8 +1,10 @@
 import Config.ConnectionDB;
 import Controller.BookController;
 import Controller.UserController;
+import DAO.AuthorDAO;
 import DAO.BookDAO;
 import DAO.UserDao;
+import Service.AuthorService;
 import Service.BookService;
 import Service.UserService;
 import Service.UserServiceImpl;
@@ -24,14 +26,15 @@ public class Main {
             Connection connection = instance.getConnection();
 
             System.out.println("Connected to database.");
-            
-            UserDao userDao = new UserDao(connection);
-            UserService userService = new UserServiceImpl(userDao);
-            UserController userController = new UserController(userService);
 
+            UserDao userDao = new UserDao(connection);
             BookDAO bookDAO = new BookDAO();
-            BookService bookService = new BookService(bookDAO);
+
+            BookService bookService = new BookService(bookDAO, userDao);
+            UserService userService = new UserServiceImpl(userDao, bookService);
+
             BookController bookController = new BookController(bookService);
+            UserController userController = new UserController(userService);
             
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {

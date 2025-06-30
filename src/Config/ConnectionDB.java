@@ -8,10 +8,11 @@ import java.sql.SQLException;
 public class ConnectionDB {
 
     // Variables para establecer la conexion a la BBDD, van en final porque no van a ser modificadas
-    private final String url = "jdbc:h2:~/test";
+
+    private final String url = "jdbc:h2:~/test;DB_CLOSE_DELAY=-1";
     private final String driver_db = "org.h2.Driver";
     private final String username = "sa";
-    private final String password = "";
+    private final String password = "";;
 
     // Instancia unica (patron singleton)
     private static ConnectionDB instance;
@@ -28,6 +29,8 @@ public class ConnectionDB {
             Class.forName(driver_db);
             // Creamos la conexion en la varibale conn de la instancia
             this.conn = DriverManager.getConnection(url, username, password);
+            // --- ¡ESTA ES LA LÍNEA MÁGICA QUE PROBABLEMENTE FALTA! ---
+            this.conn.setAutoCommit(true);
         }
         // Atajo los errores en caso de error -> CATCH (Multiple)
         catch (ClassNotFoundException e) {

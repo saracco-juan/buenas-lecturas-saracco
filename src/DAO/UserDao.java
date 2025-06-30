@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Clase que hereda de baseDAO
+@SuppressWarnings("ALL")
 public class UserDao extends BaseDAO<User> {
 
     // Acceso a la conexion a traves del constructor del padre (BaseDAO)
@@ -267,21 +268,103 @@ public class UserDao extends BaseDAO<User> {
         }
     }
 
-    public List<String> getBookIsbnsForList(int userId, String listType) {
+//    public List<String> getBookIsbnsForList(int userId, String listType) {
+//        String sql = "SELECT book_isbn FROM user_books WHERE user_id = ? AND list_type = ?";
+//        List<String> isbns = new ArrayList<>();
+//        try {
+//            PreparedStatement ps = conn.prepareStatement(sql);
+//            ps.setInt(1, userId);
+//            ps.setString(2, listType);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                isbns.add(rs.getString("book_isbn"));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return isbns;
+//    }
+
+    public List<String> getBookKeysForList(int userId, String listType) {
+        // CAMBIA "book_work_id" a "book_isbn" para que coincida con tu tabla
         String sql = "SELECT book_isbn FROM user_books WHERE user_id = ? AND list_type = ?";
-        List<String> isbns = new ArrayList<>();
+        List<String> keys = new ArrayList<>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
             ps.setString(2, listType);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                isbns.add(rs.getString("book_isbn"));
+                // Asegúrate de usar el mismo nombre aquí también
+                keys.add(rs.getString("book_isbn"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return isbns;
+        return keys;
+    }
+
+    public Response<Void> removeBookFromList(int userId, String bookIsbn, String listType) {
+        // La consulta SQL usa los nombres de columna de tu tabla: user_id, book_isbn, list_type
+        String sql = "DELETE FROM user_books WHERE user_id = ? AND book_isbn = ? AND list_type = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setString(2, bookIsbn);
+            ps.setString(3, listType);
+
+            int affectedRows = ps.executeUpdate();
+
+            if (affectedRows > 0) {
+                // Se eliminó al menos una fila, la operación fue exitosa.
+                return new Response<>("Libro eliminado de la lista correctamente.", "200", true, null);
+            } else {
+                // No se eliminó ninguna fila. Esto puede significar que el libro no estaba en la lista.
+                // No es necesariamente un error grave, pero es bueno informarlo.
+                return new Response<>("El libro no se encontró en la lista especificada.", "404", false);
+            }
+
+        } catch (SQLException e) {
+            // Ocurrió un error de SQL.
+            System.out.println("Error al eliminar el libro de la lista del usuario.");
+            e.printStackTrace();
+            return new Response<>("Error de base de datos al eliminar el libro: " + e.getMessage(), "500", false);
+        }
+    }
+
+    public Response<Void> moveBookBetweenLists(int userId, String bookIsbn, String fromListType, String toListType) {
+        String sql = "UPDATE user_books SET list_type = ? WHERE user_id = ? AND book_isbn = ? AND list_type = ?";
+
+        // --- LÍNEAS DE DEPURACIÓN ---
+        System.out.println("---[DAO DEBUG]---");
+        System.out.println("Intentando ejecutar UPDATE:");
+        System.out.println("  - toListType: " + toListType);
+        System.out.println("  - userId: " + userId);
+        System.out.println("  - bookIsbn: " + bookIsbn);
+        System.out.println("  - fromListType: " + fromListType);
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, toListType);
+            ps.setInt(2, userId);
+            ps.setString(3, bookIsbn);
+            ps.setString(4, fromListType);
+
+            int affectedRows = ps.executeUpdate();
+
+            // --- MÁS LÍNEAS DE DEPURACIÓN ---
+            System.out.println("Filas afectadas por el UPDATE: " + affectedRows);
+            System.out.println("-----------------");
+
+            if (affectedRows > 0) {
+                return new Response<>("Libro movido de lista correctamente.", "200", true, null);
+            } else {
+                return new Response<>("El libro no se encontró en la lista de origen especificada.", "404", false);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Response<>("Error de base de datos al mover el libro: " + e.getMessage(), "500", false);
+        }
     }
 }
 

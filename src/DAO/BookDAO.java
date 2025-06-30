@@ -2,15 +2,9 @@ package DAO;
 
 import API.APIClient;
 import Model.Book;
-import Model.Response;
 
-import java.net.URI;
 import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,10 +19,13 @@ public class BookDAO {
     //Dependecia que me va a permitir pasar los objetos JSON a objetos JAVA
     private final ObjectMapper objectMapper;
 
+    private final AuthorDAO authorDAO;
+
     //Al crear la clase, instancio el api client y el object mapper
     public BookDAO() {
         this.apiClient = new APIClient(); // Crea la instancia
         this.objectMapper = new ObjectMapper();
+        this.authorDAO = new AuthorDAO();
     }
 
     //Metodo para buscar libro por titulo
@@ -88,5 +85,61 @@ public class BookDAO {
                        return Collections.<Book>emptyList();
                    }
                });
+    }
+
+    //Metodo para buscar libro por key
+    public CompletableFuture<Book> findByKey(String key) {
+        // La URL se construye a partir de la clave
+        String url = "https://openlibrary.org" + key + ".json";
+
+//        return apiClient.getAsync(url)
+//                .thenApply(jsonBody -> {
+//                    if (jsonBody == null) return null;
+//                    try {
+//                        JsonNode bookNode = objectMapper.readTree(jsonBody);
+//                        // Parseamos los detalles de este libro único
+//                        String title = bookNode.path("title").asText("Sin Título");
+//                        // ... podrías obtener más detalles aquí ...
+//
+//                        // Necesitamos el nombre del autor, que puede requerir otra llamada o parseo complejo
+//                        String authorName = "Desconocido"; // Simplificación
+//
+//                        return new Book(key, title, authorName);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        return null;
+//                    }
+//                });
+        return apiClient.getAsync(url)
+                .thenCompose(jsonBody -> { // ¡Usamos thenCompose para encadenar futuros!
+                    if (jsonBody == null) {
+                        // Si la primera llamada falla, devolvemos un futuro completado con null.
+                        return CompletableFuture.completedFuture(null);
+                    }
+                    try {
+                        JsonNode bookNode = objectMapper.readTree(jsonBody);
+                        String title = bookNode.path("title").asText("Sin Título");
+
+                        // 1. Extraer la clave del autor del JSON del libro.
+                        JsonNode authorNode = bookNode.path("authors").get(0).path("author").path("key");
+                        String authorKey = authorNode.asText();
+
+                        if (authorKey.isEmpty()) {
+                            // Si no hay autor, creamos el libro con "Desconocido".
+                            Book book = new Book(key, title, "Desconocido");
+                            return CompletableFuture.completedFuture(book);
+                        }
+
+                        // 2. Usamos esa clave para buscar el nombre del autor. Esto devuelve OTRO futuro.
+                        CompletableFuture<String> authorNameFuture = authorDAO.findAuthorNameByKey(authorKey);
+
+                        // 3. Cuando el futuro del nombre del autor se complete, creamos el objeto Book.
+                        return authorNameFuture.thenApply(authorName -> new Book(key, title, authorName));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return CompletableFuture.completedFuture(null);
+                    }
+                });
     }
 }
