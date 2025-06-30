@@ -81,11 +81,16 @@ private String generateStars(int rating) {
         jScrollPane1 = new javax.swing.JScrollPane();
         commentArea = new javax.swing.JTextArea();
 
+        setBackground(new java.awt.Color(255, 204, 153));
+
+        titleLabel.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         titleLabel.setText("nombre del autor");
 
+        ratingLabel.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         ratingLabel.setText("estrellas");
 
         commentArea.setColumns(20);
+        commentArea.setFont(new java.awt.Font("Serif", 0, 12)); // NOI18N
         commentArea.setLineWrap(true);
         commentArea.setRows(5);
         commentArea.setWrapStyleWord(true);
@@ -101,9 +106,9 @@ private String generateStars(int rating) {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
-                        .addComponent(ratingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ratingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -114,8 +119,8 @@ private String generateStars(int rating) {
                     .addComponent(titleLabel)
                     .addComponent(ratingLabel))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -76,7 +76,10 @@ private void saveReview() {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
+        ratingSlider.setBackground(new java.awt.Color(255, 255, 255));
+        ratingSlider.setForeground(new java.awt.Color(0, 0, 0));
         ratingSlider.setMajorTickSpacing(1);
         ratingSlider.setMaximum(5);
         ratingSlider.setMinimum(1);
@@ -86,9 +89,12 @@ private void saveReview() {
         ratingSlider.setValue(3);
 
         commentTextArea.setColumns(20);
+        commentTextArea.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
         commentTextArea.setRows(5);
         ScrollPane.setViewportView(commentTextArea);
 
+        saveButton.setBackground(new java.awt.Color(255, 255, 255));
+        saveButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         saveButton.setText("Guardar ");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,6 +102,8 @@ private void saveReview() {
             }
         });
 
+        cancelButton.setBackground(new java.awt.Color(255, 255, 255));
+        cancelButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         cancelButton.setText("Cancelar");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -117,12 +125,12 @@ private void saveReview() {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(ratingSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(ScrollPane)))
-                .addContainerGap(114, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(57, Short.MAX_VALUE)
+                .addContainerGap(53, Short.MAX_VALUE)
                 .addComponent(ScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ratingSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)

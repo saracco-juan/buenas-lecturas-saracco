@@ -28,8 +28,8 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="350" max="-2" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace pref="307" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jTextField3" min="-2" pref="246" max="-2" attributes="0"/>
@@ -42,14 +42,14 @@
                   <Component id="userName" alignment="0" max="32767" attributes="0"/>
                   <Component id="jLabel1" min="-2" pref="385" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="380" max="32767" attributes="0"/>
+              <EmptySpace pref="308" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="203" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="200" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="userName" min="-2" max="-2" attributes="0"/>
@@ -64,7 +64,7 @@
                   <Component id="jTextField3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="loginButon" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="226" max="32767" attributes="0"/>
+              <EmptySpace pref="232" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

@@ -54,17 +54,29 @@ public class ReviewsPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         reviewsList = new javax.swing.JList<>();
         backButton = new javax.swing.JButton();
+        loggoutButton = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(255, 204, 153));
+
+        jLabel1.setBackground(new java.awt.Color(255, 204, 153));
+        jLabel1.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
         jLabel1.setText("Mis Reseñas");
 
+        reviewsList.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
         jScrollPane1.setViewportView(reviewsList);
 
+        backButton.setBackground(new java.awt.Color(255, 243, 232));
+        backButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         backButton.setText("Volver al Perfil");
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 backButtonActionPerformed(evt);
             }
         });
+
+        loggoutButton.setBackground(new java.awt.Color(255, 243, 232));
+        loggoutButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
+        loggoutButton.setText("Cerrar Sesión");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -76,10 +88,12 @@ public class ReviewsPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 820, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(backButton, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(loggoutButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(backButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -87,11 +101,14 @@ public class ReviewsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(backButton))
-                .addGap(40, 40, 40))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(backButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loggoutButton))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -104,6 +121,7 @@ public class ReviewsPanel extends javax.swing.JPanel {
     private javax.swing.JButton backButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton loggoutButton;
     private javax.swing.JList<Book> reviewsList;
     // End of variables declaration//GEN-END:variables
 }
