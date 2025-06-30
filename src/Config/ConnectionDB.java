@@ -19,46 +19,68 @@ public class ConnectionDB {
     // Conexion a la BBDD utilizando la clase Connection
     private Connection conn;
 
-    // Metodo para conectarse a la BBDD
-    private ConnectionDB() throws SQLException {
-
-        // Pruebo la conexion -> TRY
-        try {
-            // Esta linea lo que hace es cargar el driver de JDBC (para H2 en este caso)
-            // Una vez cargado, se registra automaticamente en el DriverManager
-            Class.forName(driver_db);
-            // Creamos la conexion en la varibale conn de la instancia
-            this.conn = DriverManager.getConnection(url, username, password);
-            // --- ¡ESTA ES LA LÍNEA MÁGICA QUE PROBABLEMENTE FALTA! ---
-            this.conn.setAutoCommit(true);
-        }
-        // Atajo los errores en caso de error -> CATCH (Multiple)
-        catch (ClassNotFoundException e) {
-            System.out.println("Driver Not Found");
-        }  catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (Exception e){
-            System.out.println("Error: " + e.getMessage());
-        }
+    // 2. El constructor es simple, solo establece la conexión.
+    //    Propaga la excepción si algo falla.
+    private ConnectionDB() throws SQLException, ClassNotFoundException {
+        Class.forName(driver_db);
+        this.conn = DriverManager.getConnection(url, username, password);
+        this.conn.setAutoCommit(true); // Mantenemos el auto-commit.
     }
 
-    // Metodo que devuelve la conexion para utilizarla
     public Connection getConnection() {
         return this.conn;
     }
 
-    // Constructor de la clase static (Patron Singleton)
-    public static ConnectionDB getInstance() throws SQLException {
-        //Si la instancia es null, creo la conexion
-        if (instance == null) {
-            instance = new ConnectionDB();
-        //Si la instancia existe pero la conexion esta cerrada, creo la conexion
-        }else if(instance.getConnection().isClosed()){
+    // 3. El Singleton se mantiene igual de robusto.
+    public static ConnectionDB getInstance() throws SQLException, ClassNotFoundException {
+        if (instance == null || instance.getConnection().isClosed()) {
             instance = new ConnectionDB();
         }
-
-      // Sino, devuelvo la instance que ya existe
-      return instance;
+        return instance;
     }
+
+//    // Metodo para conectarse a la BBDD
+//    private ConnectionDB() throws SQLException {
+//
+//        // Pruebo la conexion -> TRY
+//        try {
+//            // Esta linea lo que hace es cargar el driver de JDBC (para H2 en este caso)
+//            // Una vez cargado, se registra automaticamente en el DriverManager
+//            Class.forName(driver_db);
+//            // Creamos la conexion en la varibale conn de la instancia
+//            this.conn = DriverManager.getConnection(url, username, password);
+//            // --- ¡ESTA ES LA LÍNEA MÁGICA QUE PROBABLEMENTE FALTA! ---
+//            this.conn.setAutoCommit(true);
+//        }
+//        // Atajo los errores en caso de error -> CATCH (Multiple)
+//        catch (ClassNotFoundException e) {
+//            System.out.println("Driver Not Found");
+//        }  catch (SQLException e) {
+//            System.out.println("SQL Exception: " + e.getMessage());
+//        } catch (Exception e){
+//            System.out.println("Error: " + e.getMessage());
+//        }
+//    }
+//
+//    // Metodo que devuelve la conexion para utilizarla
+//    public Connection getConnection() {
+//        return this.conn;
+//    }
+//
+//    // Constructor de la clase static (Patron Singleton)
+//    public static ConnectionDB getInstance() throws SQLException {
+//        //Si la instancia es null, creo la conexion
+//        if (instance == null) {
+//            instance = new ConnectionDB();
+//        //Si la instancia existe pero la conexion esta cerrada, creo la conexion
+//        }else if(instance.getConnection().isClosed()){
+//            instance = new ConnectionDB();
+//        }
+//
+//      // Sino, devuelvo la instance que ya existe
+//      return instance;
+//    }
+
+
 
 }

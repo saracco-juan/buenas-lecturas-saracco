@@ -32,49 +32,116 @@ public class ProfilePanel extends javax.swing.JPanel {
     
     // 3. MÉTODO PARA INICIALIZAR LOS LISTENERS DE LOS BOTONES
     private void initListeners() {
-        // Acción para el botón "Marcar como Leído"
-    markAsReadButon.addActionListener(e -> {
-    // Obtenemos el libro seleccionado de la lista "Quiero Leer"
+    // --- TUS LISTENERS EXISTENTES ---
+   markAsReadButon.addActionListener(e -> {
+    // 1. Obtener el libro seleccionado de la lista "Quiero Leer"
     Book selectedBook = wishlistList.getSelectedValue();
 
+    // 2. Validar que se haya seleccionado un libro
     if (selectedBook == null) {
         JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de la lista 'Quiero Leer'.", "Ningún libro seleccionado", JOptionPane.WARNING_MESSAGE);
-        return;
+        return; // Detiene la ejecución si no hay nada seleccionado
     }
     
-    // Llamamos al nuevo método del controlador
+    // 3. Llamar al método del controlador para mover el libro
     if (bookController != null) {
         bookController.moveBookToReadList(selectedBook);
     }
 });
-        // Reemplaza 'deleteButton' con el nombre real de tu componente
-        deleteButon.addActionListener(e -> handleDeleteBook());
-        
-        // Listener para el botón "Inicio" si lo necesitas
-        homeButon.addActionListener(e -> mainFrame.showPanel("HOME_PANEL"));
-        
-        
+    deleteButon.addActionListener(e -> handleDeleteBook());
+    homeButon.addActionListener(e -> mainFrame.showPanel("HOME_PANEL"));
+
+    // --- LÓGICA DE LOS BOTONES DE RESEÑA ---
+    
+    // Acción para el botón "Añadir Reseña"
+    addReviewButton.addActionListener(e -> handleReviewAction()); // Suponiendo que tu botón se llama addReviewButton
+
+    // Acción para el nuevo botón "Ver Reseñas"
+    viewReviewsButton.addActionListener(e -> {
+        if (currentUser != null) {
+            mainFrame.showReviewsPanel(currentUser);
+            
+        }
+    });
+
+    // --- LÓGICA DE SELECCIÓN DE LISTAS ---
+    
+    // Cuando se selecciona algo en "Quiero Leer"
+    wishlistList.addListSelectionListener(e -> {
+        if (!e.getValueIsAdjusting()) {
+            boolean isSelected = wishlistList.getSelectedIndex() != -1;
+            markAsReadButon.setEnabled(isSelected);
+            if (isSelected) {
+                readlistList.clearSelection();
+                addReviewButton.setEnabled(false); // Desactivar botón de reseña
+            }
+        }
+    });
+
+    // Cuando se selecciona algo en "Leídos"
+    readlistList.addListSelectionListener(e -> {
+        if (!e.getValueIsAdjusting()) {
+            boolean isSelected = readlistList.getSelectedIndex() != -1;
+            addReviewButton.setEnabled(isSelected); // Activar botón de reseña
+            if (isSelected) {
+                wishlistList.clearSelection();
+                markAsReadButon.setEnabled(false); // Desactivar botón de mover
+            }
+        }
+    });
+
+    // --- ESTADO INICIAL DE LOS BOTONES ---
+    markAsReadButon.setEnabled(false);
+    addReviewButton.setEnabled(false); // El botón de reseña empieza desactivado
+}
+    
+    private void handleReviewAction() {
+    Book selectedBook = readlistList.getSelectedValue();
+    if (selectedBook == null) {
+        JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de la lista 'Leídos'.", "Error", JOptionPane.WARNING_MESSAGE);
+        return;
     }
+    ReviewDialog reviewDialog = new ReviewDialog(mainFrame, selectedBook, bookController);
+    reviewDialog.setVisible(true);
+}
     
         // 4. LÓGICA DEL EVENTO DE ELIMINACIÓN
     private void handleDeleteBook() {
-        // Obtenemos el libro seleccionado de la lista "Quiero Leer"
-        // Reemplaza 'wantToReadList' con el nombre real de tu JList
-        Book selectedBook = wishlistList.getSelectedValue();
+        Book selectedBook = null;
+        String listType = null;
 
+        // Comprobamos primero si hay algo seleccionado en la lista "Quiero Leer"
+        if (wishlistList.getSelectedValue() != null) {
+            selectedBook = wishlistList.getSelectedValue();
+            listType = "WANT_TO_READ";
+        } 
+        // Si no, comprobamos la lista "Leídos"
+        else if (readlistList.getSelectedValue() != null) {
+            selectedBook = readlistList.getSelectedValue();
+            listType = "READ";
+        }
+
+        // Si después de comprobar ambas listas, no hay nada seleccionado, mostramos un error.
         if (selectedBook == null) {
-            JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro para eliminar.", "Ningún libro seleccionado", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de alguna de las listas para eliminar.", "Ningún libro seleccionado", JOptionPane.WARNING_MESSAGE);
             return;
         }
-   if (bookController != null) {
-            bookController.removeBookFromList(selectedBook, "WANT_TO_READ");
-        } else {
-             // Esto te ayudará a depurar si olvidas conectar el controlador
-            System.err.println("Error: BookController no ha sido inicializado en ProfilePanel.");
-            JOptionPane.showMessageDialog(this, "Error de configuración de la aplicación.", "Error", JOptionPane.ERROR_MESSAGE);
+
+        // Pedimos confirmación al usuario
+        int choice = JOptionPane.showConfirmDialog(this, 
+            "¿Estás seguro de que quieres eliminar \"" + selectedBook.getName() + "\" de tu lista?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION);
+
+        if (choice == JOptionPane.YES_OPTION) {
+            // Llamamos al controlador con los datos correctos
+            if (bookController != null) {
+                bookController.removeBookFromList(selectedBook, listType);
+            } else {
+                System.err.println("Error: BookController no ha sido inicializado en ProfilePanel.");
+                JOptionPane.showMessageDialog(this, "Error de configuración de la aplicación.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
-   
-   
     }
     
     public void refreshView(User updatedUser) {
@@ -84,8 +151,6 @@ public class ProfilePanel extends javax.swing.JPanel {
     // Paso B: Llama a tu método privado existente para que redibuje todo.
     updateProfileDisplay();
     }
-    
-    
     
     // El Frame usará este método para darnos una instancia del controlador.
     public void setController(BookController bookController) {
@@ -162,6 +227,8 @@ public class ProfilePanel extends javax.swing.JPanel {
         homeButon = new javax.swing.JButton();
         deleteButon = new javax.swing.JButton();
         markAsReadButon = new javax.swing.JButton();
+        addReviewButton = new javax.swing.JButton();
+        viewReviewsButton = new javax.swing.JButton();
 
         userName.setText("user name here");
 
@@ -182,6 +249,11 @@ public class ProfilePanel extends javax.swing.JPanel {
         deleteButon.setText("Eliminar seleccionado");
 
         markAsReadButon.setText("Marcar como Leído");
+
+        addReviewButton.setText("Añadir Reseña");
+        addReviewButton.setEnabled(false);
+
+        viewReviewsButton.setText("Ver Reseñas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -212,7 +284,9 @@ public class ProfilePanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(homeButon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(deleteButon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(markAsReadButon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(markAsReadButon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(addReviewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(viewReviewsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(189, 189, 189))))
         );
         layout.setVerticalGroup(
@@ -234,7 +308,11 @@ public class ProfilePanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(markAsReadButon)
                                 .addGap(4, 4, 4)
-                                .addComponent(deleteButon))
+                                .addComponent(deleteButon)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addReviewButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(viewReviewsButton))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
@@ -248,6 +326,7 @@ public class ProfilePanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addReviewButton;
     private javax.swing.JButton deleteButon;
     private javax.swing.JButton homeButon;
     private javax.swing.JLabel jLabel1;
@@ -260,6 +339,7 @@ public class ProfilePanel extends javax.swing.JPanel {
     private javax.swing.JButton markAsReadButon;
     private javax.swing.JList<Book> readlistList;
     private javax.swing.JLabel userName;
+    private javax.swing.JButton viewReviewsButton;
     private javax.swing.JList<Book> wishlistList;
     // End of variables declaration//GEN-END:variables
 }

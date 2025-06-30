@@ -3,6 +3,7 @@ import Controller.BookController;
 import Controller.UserController;
 import DAO.AuthorDAO;
 import DAO.BookDAO;
+import DAO.ReviewDAO;
 import DAO.UserDao;
 import Service.AuthorService;
 import Service.BookService;
@@ -29,8 +30,9 @@ public class Main {
 
             UserDao userDao = new UserDao(connection);
             BookDAO bookDAO = new BookDAO();
+            ReviewDAO reviewDAO = new ReviewDAO(connection);
 
-            BookService bookService = new BookService(bookDAO, userDao);
+            BookService bookService = new BookService(bookDAO, userDao, reviewDAO);
             UserService userService = new UserServiceImpl(userDao, bookService);
 
             BookController bookController = new BookController(bookService);
@@ -48,7 +50,12 @@ public class Main {
                 }
         }); 
         }catch (Exception e){
-            JOptionPane.showMessageDialog(null,e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            System.err.println("Error fatal al inicializar la base de datos. La aplicación no puede continuar.");
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "No se pudo conectar a la base de datos. Verifique la configuración.\nError: " + e.getMessage(),
+                    "Error Crítico",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
 

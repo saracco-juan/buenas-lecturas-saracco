@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
     // Paso 3: Obtener las claves de ambas listas desde la BBDD
     List<String> wantToReadKeys = userDao.getBookKeysForList(userFromDB.getId(), "WANT_TO_READ");
-    List<String> readKeys = userDao.getBookKeysForList(userFromDB.getId(), "READ_BOOKS");
+    List<String> readKeys = userDao.getBookKeysForList(userFromDB.getId(), "READ");
 
     // Paso 4: Lanzar todas las peticiones a la API en paralelo
 
@@ -161,6 +161,11 @@ public class UserServiceImpl implements UserService {
             if (book != null) readList.add(book);
         }
         userFromDB.setReadBooks(readList);
+
+
+
+        bookService.enrichBookListsWithReviews(userFromDB);
+
 
     } catch (Exception e) {
         System.err.println("Error al cargar las listas de libros del usuario durante el login.");

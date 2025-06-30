@@ -17,20 +17,18 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     
     //Usuario logeado
     private User loggedInUser;
-
     
     //paneles
     private LoginPanel loginPanel;
     private RegisterPanel registerPanel;
     private HomePanel homePanel;
     private ProfilePanel profilePanel;
+    private ReviewsPanel reviewsPanel;
     
-    private BookController  bookController;
+    private BookController bookController;
     private final UserController userController;
 
- 
-    
-       public Frame(UserController userController,  BookController bookController) {
+    public Frame(UserController userController, BookController bookController) {
            
         // Guardamos las referencias a los controladores
         this.userController = userController;
@@ -51,6 +49,7 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
         registerPanel = new RegisterPanel(this, userController);
         homePanel = new HomePanel(this, userController, bookController);
         profilePanel = new ProfilePanel(this);
+        reviewsPanel = new ReviewsPanel(this);
         
         profilePanel.setController(bookController);
 
@@ -59,9 +58,7 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
         getContentPane().add(registerPanel, "REGISTER_PANEL");
         getContentPane().add(homePanel, "HOME_PANEL");
         getContentPane().add(profilePanel, "PROFILE_PANEL");
-        
-
-
+        getContentPane().add(reviewsPanel, "REVIEWS_PANEL");
 
         // --- 5. Ajustar el tamaño del Frame y hacerlo visible ---
         pack(); // Ajusta el tamaño del Frame al tamaño preferido de sus componentes.
@@ -73,6 +70,18 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     public void showPanel(String panelName){
         cardLayout.show(getContentPane(), panelName);
     }
+    
+ 
+    public void showReviewsPanel(User user) {
+        if (reviewsPanel != null) {
+            // 1. Pasa los datos al panel para que se actualice
+            reviewsPanel.displayReviews(user);
+            
+            // 2. Obtiene el CardLayout y muestra el panel de reseñas
+            cardLayout.show(getContentPane(), "REVIEWS_PANEL");
+        }
+    }
+    
     
     //Metodos de la interfaz
     @Override
@@ -129,7 +138,6 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
         }
     }
     
-    
     @Override
     public void navigateToLogin(User user) {
         //SYSO de test
@@ -137,15 +145,7 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
         
         //Accedo al metodo show panel y le paso el nombre del panel home        
         this.showPanel("LOGIN_PANEL");
-    } 
-    
-    
-    
-
-    
-    
-    
-    
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -157,6 +157,7 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

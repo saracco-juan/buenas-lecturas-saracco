@@ -49,6 +49,8 @@
                           <Component id="homeButon" max="32767" attributes="0"/>
                           <Component id="deleteButon" alignment="0" max="32767" attributes="0"/>
                           <Component id="markAsReadButon" alignment="0" max="32767" attributes="0"/>
+                          <Component id="addReviewButton" max="32767" attributes="0"/>
+                          <Component id="viewReviewsButton" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="189" max="-2" attributes="0"/>
                   </Group>
@@ -78,6 +80,10 @@
                               <Component id="markAsReadButon" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                               <Component id="deleteButon" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="addReviewButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="viewReviewsButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane2" min="-2" pref="130" max="-2" attributes="0"/>
                       </Group>
@@ -186,6 +192,17 @@
     <Component class="javax.swing.JButton" name="markAsReadButon">
       <Properties>
         <Property name="text" type="java.lang.String" value="Marcar como Le&#xed;do"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="addReviewButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="A&#xf1;adir Rese&#xf1;a"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="viewReviewsButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ver Rese&#xf1;as"/>
       </Properties>
     </Component>
   </SubComponents>

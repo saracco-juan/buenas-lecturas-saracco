@@ -13,6 +13,7 @@ public class Book {
     private String numberOfPages;
     private Date publishDate;
     private String imageURL;
+    private Review review;
 
     public Book(String workId, String name, String authorName){
         this.workId = workId;
@@ -29,6 +30,14 @@ public class Book {
         this.numberOfPages = numberOfPages;
         this.publishDate = publishDate;
         this.imageURL = imageURL;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
     }
 
     public String getWorkId() {

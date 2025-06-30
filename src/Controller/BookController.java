@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Book;
 import Model.Response;
+import Model.Review;
 import Model.User;
 import Service.BookService;
 import View.HomePanel;
@@ -73,8 +74,10 @@ public class BookController {
             if ("WANT_TO_READ".equals(listType)) {
                 // Asumo que tu clase User tiene un método como getWantToRead() que devuelve la lista
                 loggedInUser.getWantToRead().remove(book);
+            }else if ("READ".equals(listType)) {
+                // ¡ESTA ES LA LÓGICA QUE FALTABA!
+                loggedInUser.getReadBooks().remove(book);
             }
-            // Aquí irían los 'else if' para otras listas como "Leídos".
 
             // Notificar a la vista que debe refrescar el panel de perfil
             view.refreshProfileView(loggedInUser);
@@ -117,6 +120,51 @@ public class BookController {
         } else {
             // Error: Mostrar el mensaje que viene del servicio/repositorio
             view.showErrorMessage("Error al mover el libro: " + response.getMessage());
+        }
+    }
+
+    // Pega este nuevo método en tu clase BookController.java
+
+    /**
+     * Gestiona la petición desde la vista para guardar o actualizar una reseña de un libro.
+     * @param book El libro que se está reseñando.
+     * @param rating La calificación de 1 a 5.
+     * @param comment El comentario de la reseña.
+     */
+    public void saveReview(Book book, int rating, String comment) {
+        if (loggedInUser == null) {
+            view.showErrorMessage("Error: No hay un usuario activo para guardar una reseña.");
+            return;
+        }
+
+        // 1. Validaciones básicas de los datos de entrada
+        if (rating < 1 || rating > 5) {
+            view.showErrorMessage("La calificación debe estar entre 1 y 5 estrellas.");
+            return;
+        }
+        if (comment == null || comment.trim().isEmpty()) {
+            view.showErrorMessage("El comentario no puede estar vacío.");
+            return;
+        }
+
+        // 2. Delegar la operación a la capa de servicio
+        // Llamamos al método que creamos en BookService
+        Response<Review> response = bookService.saveOrUpdateReview(loggedInUser, book, rating, comment);
+
+        // 3. Procesar la respuesta del servicio
+        if (response.getStatus()) {
+            // --- ¡ÉXITO! ---
+            // Nuestro BookService ya se encargó de actualizar el objeto 'book' en memoria
+            // con la nueva reseña. ¡No tenemos que hacerlo aquí!
+            // Simplemente notificamos a la vista que refresque el panel para mostrar los cambios.
+            view.refreshProfileView(loggedInUser);
+
+            // Opcional: Mostrar un mensaje de éxito. Podrías usar el del response.
+            //view.showSuccessMessage(response.getMessage()); // Asumiendo que tienes un método showSuccessMessage en tu HomeView
+        } else {
+            // --- ERROR ---
+            // Mostrar el mensaje de error que viene desde las capas inferiores.
+            view.showErrorMessage("Error al guardar la reseña: " + response.getMessage());
         }
     }
 

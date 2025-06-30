@@ -13,6 +13,9 @@ public class User {
     private ArrayList<Book> wantToRead;
     private ArrayList<Author> suggestions;
 
+    private Review review;
+
+
 
 
     public User(int id, String name, String email, String password) {
@@ -32,6 +35,14 @@ public class User {
         wantToRead = new ArrayList<>();
         suggestions = new ArrayList<>();
 
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
     }
 
     public int getId() {

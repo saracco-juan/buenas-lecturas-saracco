@@ -1,29 +1,52 @@
 package Model;
 
+import java.time.LocalDateTime;
+
 public class Review {
 
-    private int id;
+    private long id;
+    private long userId;
+    private String bookWorkId; // Coincide con la columna BOOK_ISBN que almacena el Work ID
+    private Integer rating;    // Usamos Integer para permitir nulls, representa la calificación de 1-5
     private String comment;
-    // Este atributo tome la decision de usar el Double como objeto,
-    // en vez de double primitivo para poder poner null como valor
-    private Double value;
-    private User user;
-    private Book book;
+    private LocalDateTime createdAt;
 
-    public Review(int id, String comment, Double value, User user, Book book) {
-        this.id = id;
-        this.comment = comment;
-        this.value = value;
-        this.user = user;
-        this.book = book;
+    // Constructor vacío
+    public Review() {
     }
 
-    public int getId() {
+    // Getters y Setters...
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public String getBookWorkId() {
+        return bookWorkId;
+    }
+
+    public void setBookWorkId(String bookWorkId) {
+        this.bookWorkId = bookWorkId;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 
     public String getComment() {
@@ -34,27 +57,11 @@ public class Review {
         this.comment = comment;
     }
 
-    public Double getValue() {
-        return value;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setValue(Double value) {
-        this.value = value;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
