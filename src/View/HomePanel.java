@@ -59,14 +59,32 @@ public class HomePanel extends javax.swing.JPanel {
      
         // Acción para el botón "Añadir a Quiero Leer"
         addToWhishlistButon.addActionListener(e -> {
+            
+            System.out.println("1. Clic en 'Añadir a Quiero Leer' detectado.");
+            
             // Obtenemos el libro seleccionado de la lista
             Book selectedBook = resultsList.getSelectedValue();
+            
+            // Verifiquemos si los objetos son nulos
+            System.out.println("   - Libro seleccionado: " + (selectedBook != null ? selectedBook.getName() : "null"));
+            System.out.println("   - Usuario actual: " + (currentUser != null ? currentUser.getName() : "null"));
+    
             if (selectedBook != null && currentUser != null) {
                 // Llamamos al controlador de usuario para que haga el trabajo
+                System.out.println("   - Llamando al controlador...");
                 userController.addBookToWhishlist(currentUser, selectedBook);
+            }else{
+                System.err.println("   - ¡ERROR! El libro o el usuario es null. No se puede continuar.");
             }
         });
         
+    }
+    
+    //Seteo el usuario que esta utilizando la aplicacion
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+        // Opcional: puedes actualizar una etiqueta para que diga "Bienvenido, Juan"
+        // lblWelcome.setText("Bienvenido, " + this.currentUser.getName());
     }
     
     private void handleSearchClick(){

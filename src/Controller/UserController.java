@@ -85,7 +85,11 @@ public class UserController {
 
     public void addBookToWhishlist(User user, Book book) {
 
+        System.out.println("2. UserController recibió la orden de añadir '" + book.getName() + "' a la lista.");
+
         Response<User> response = userService.addBookToWishlist(user, book);
+
+        System.out.println("4. Controlador recibió respuesta del servicio. Estado: " + response.getStatus());
 
         if(response.getStatus()){
             ((AuthView) view).showSuccessMessage(response.getMessage());

@@ -101,7 +101,7 @@ public class Book {
     public String toString() {
         // Aquí puedes personalizar cómo se ve.
         // La forma "Título - Autor" es una excelente opción.
-        return this.getName() + " - " + this.getAuthorName() + " - " + this.getWorkId();
+        return this.getName() + " - " + this.getAuthorName(); // opcion para ver el ISBN -> + " - " + this.getWorkId();
     }
 
     // También es CRUCIAL implementar equals() y hashCode() para que las listas funcionen bien.

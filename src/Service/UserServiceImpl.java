@@ -74,11 +74,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response<User> addBookToWishlist(User user, Book book) {
 
-        //Proxima implementacion
-         if (user.getWantToRead().contains(book)) {
-             return new Response<>("Este libro ya está en tu lista de 'Quiero Leer'.", "409", false);
+        System.out.println("3. UserServiceImpl va a procesar la petición.");
+
+
+        // Lógica de negocio
+        if (user.getWantToRead().contains(book)) {
+            System.out.println("   - El libro ya existe en la lista. Devolviendo error.");
+            return new Response<>("Este libro ya está en tu lista de 'Quiero Leer'.", "409", false);
         }
 
+        System.out.println("   - Llamando al DAO para guardar en BBDD...");
         Response<?> daoResponse = userDao.addBookToWishlist(user.getId(), book.getWorkId());
 
         // Si se guardó en la BBDD, actualiza el objeto en memoria

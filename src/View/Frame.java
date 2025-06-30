@@ -15,6 +15,10 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     //El card layout es el que se encarga de manejar las vistas
     private final CardLayout cardLayout;
     
+    //Usuario logeado
+    private User loggedInUser;
+
+    
     //paneles
     private LoginPanel loginPanel;
     private RegisterPanel registerPanel;
@@ -72,6 +76,13 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     public void navigateToHome(User user) {
         //SYSO de test
         System.out.println("Navegando a la pantalla principal para el usuario: " + user.getName());
+        
+        // 1. GUARDA EL USUARIO EN EL FRAME
+         this.loggedInUser = user;
+    
+         // 2. PASA EL USUARIO AL HOMEPANEL
+         //    Ahora que tenemos el usuario, se lo damos al panel que lo necesita.
+             homePanel.setCurrentUser(this.loggedInUser);
         
         //Accedo al metodo show panel y le paso el nombre del panel home
         this.showPanel("HOME_PANEL");
