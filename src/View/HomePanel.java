@@ -5,9 +5,13 @@
  */
 package View;
 
+import Controller.BookController;
 import Controller.UserController;
 import Model.Book;
+import Model.User;
+import java.awt.event.ActionEvent;
 import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,12 +23,59 @@ public class HomePanel extends javax.swing.JPanel {
    //Dependencias con el main frame y el user controller
    private Frame mainFrame;
    private UserController userController;
+   private BookController bookController;
+   private User currentUser;
    
    //Constructor del panel
-    public HomePanel(Frame mainFrame, UserController userController) {
+    public HomePanel(Frame mainFrame, UserController userController, BookController bookController) {
+        
         initComponents();
+        
         this.mainFrame = mainFrame;
         this.userController = userController;
+        this.bookController = bookController;
+        
+        // --- INICIALIZACIÓN DEL MODELO DE LA LISTA ---
+        // Crea un modelo de lista que contendrá objetos Book.
+        DefaultListModel<Book> initialModel = new DefaultListModel<>();
+        
+        // Asigna este modelo a tu JList.
+        resultsList.setModel(initialModel);
+        
+        searchButon.addActionListener( new java.awt.event.ActionListener() {
+           
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                handleSearchClick();
+            }
+            
+        });
+        
+        // Habilitar/deshabilitar el botón según la selección en la lista
+        resultsList.addListSelectionListener(e -> {
+            // Se habilita el botón solo si algo está seleccionado
+            addToWhishlistButon.setEnabled(!resultsList.isSelectionEmpty());
+        });
+     
+        // Acción para el botón "Añadir a Quiero Leer"
+        addToWhishlistButon.addActionListener(e -> {
+            // Obtenemos el libro seleccionado de la lista
+            Book selectedBook = resultsList.getSelectedValue();
+            if (selectedBook != null && currentUser != null) {
+                // Llamamos al controlador de usuario para que haga el trabajo
+                userController.addBookToWhishlist(currentUser, selectedBook);
+            }
+        });
+        
+    }
+    
+    private void handleSearchClick(){
+        
+        System.out.println("1. Clic en el botón de búsqueda detectado.");
+        String query = buscarLibro.getText();
+        System.out.println("   - Término de búsqueda: '" + query + "'"); // <-- AÑADE ESTO
+
+        bookController.handleSearch(query);
     }
     
      public void showErrorMessage(String message) {
@@ -35,22 +86,32 @@ public class HomePanel extends javax.swing.JPanel {
      // ... dentro de la clase HomePanel ...
 
 
-    public void updateResultsList(List<Book> books) { // Le he puesto un nombre más descriptivo: "update"
-        // JList funciona mejor con un DefaultListModel
-     javax.swing.DefaultListModel<String> model = new javax.swing.DefaultListModel<>();
-    
-        if (books == null || books.isEmpty()) {
-            model.addElement("No se encontraron resultados para tu búsqueda.");
-        } else {
-            for (Book book : books) {
-                // Mostramos el título y el autor en la lista
-                model.addElement(book.getName() + " - " + book.getAuthor());
-            }
+  public void updateResultsList(List<Book> books) {
+    System.out.println("7. Dentro de updateResultsList. Actualizando el modelo con " + books.size() + " libros.");
+
+    // CREAMOS UN MODELO NUEVO CADA VEZ. Es más simple y seguro.
+    DefaultListModel<Book> newModel = new DefaultListModel<>();
+
+    if (books != null && !books.isEmpty()) {
+        // Llenamos el nuevo modelo con los libros.
+        for (Book book : books) {
+            newModel.addElement(book);
         }
+    } else {
+        // Para manejar el caso sin resultados, podríamos añadir un mensaje,
+        // pero como el modelo es de <Book>, no podemos. Lo dejamos vacío.
+        // Opcional: podrías mostrar un JLabel aparte con el mensaje "No se encontraron resultados".
+    }
+
+    // ASIGNAMOS EL NUEVO MODELO al JList.
+    // Esto notificará automáticamente al JList que debe redibujarse.
+    resultsList.setModel(newModel);
     
-        // Asigna el nuevo modelo a tu JList.
-        // Asegúrate de que tu JList en el diseñador tenga el nombre de variable "resultsList".
-        resultsList.setModel(model); 
+    // Opcional, como "seguro de vida" para forzar el repintado.
+    // resultsList.revalidate();
+    // resultsList.repaint();
+
+    System.out.println("8. Modelo asignado al JList.");
     }
 
     /**
@@ -63,31 +124,30 @@ public class HomePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        buscarAutor = new javax.swing.JTextField();
+        buscarLibro = new javax.swing.JTextField();
         searchButon = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         resultsList = new javax.swing.JList<>();
         jComboBox1 = new javax.swing.JComboBox<>();
+        addToWhishlistButon = new javax.swing.JButton();
 
         jLabel1.setText("Bienvenido a Buenas Lecturas");
 
-        buscarAutor.setText("Buscar Autor");
-        buscarAutor.addMouseListener(new java.awt.event.MouseAdapter() {
+        buscarLibro.setText("Buscar libro");
+        buscarLibro.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                buscarAutorMouseClicked(evt);
+                buscarLibroMouseClicked(evt);
             }
         });
 
         searchButon.setText("Buscar");
 
-        resultsList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(resultsList);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        addToWhishlistButon.setText("Añadir a quiero leer");
+        addToWhishlistButon.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -100,43 +160,48 @@ public class HomePanel extends javax.swing.JPanel {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(buscarAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(buscarLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(searchButon, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(32, Short.MAX_VALUE))
+                    .addComponent(searchButon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addToWhishlistButon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addGap(7, 7, 7)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buscarAutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buscarLibro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchButon))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addToWhishlistButon))
                 .addContainerGap(53, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buscarAutorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarAutorMouseClicked
-        this.buscarAutor.setText("");
-    }//GEN-LAST:event_buscarAutorMouseClicked
+    private void buscarLibroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarLibroMouseClicked
+        this.buscarLibro.setText("");
+    }//GEN-LAST:event_buscarLibroMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField buscarAutor;
+    private javax.swing.JButton addToWhishlistButon;
+    private javax.swing.JTextField buscarLibro;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JList<String> resultsList;
+    private javax.swing.JList<Book> resultsList;
     private javax.swing.JButton searchButon;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,6 +5,7 @@ import Model.Book;
 import Model.Response;
 import Model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -25,6 +26,17 @@ public class UserServiceImpl implements UserService {
         }
 
         User userFromDB = DAOresponse.getObj();
+
+        //Obtengo la lista de "Quiero leer del usuario"
+        List<String> wantToReadIsbns = userDao.getBookIsbnsForList(userFromDB.getId(), "WANT_TO_READ");
+
+        // Asegurémonos de que las listas en el objeto User no sean null
+        if (userFromDB.getWantToRead() == null) {
+            userFromDB.setWantToRead(new ArrayList<>());
+        }
+        if (userFromDB.getReadBooks() == null) {
+            userFromDB.setReadBooks(new ArrayList<>());
+        }
 
         if(userFromDB.getPassword().equals(password)){
             return new Response<>("Usuario Logueado", "200", true, userFromDB);
@@ -61,7 +73,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response<User> addBookToWishlist(User user, Book book) {
-        return null;
+
+        //Proxima implementacion
+         if (user.getWantToRead().contains(book)) {
+             return new Response<>("Este libro ya está en tu lista de 'Quiero Leer'.", "409", false);
+        }
+
+        Response<?> daoResponse = userDao.addBookToWishlist(user.getId(), book.getWorkId());
+
+        // Si se guardó en la BBDD, actualiza el objeto en memoria
+        if (daoResponse.getStatus()) {
+            user.getWantToRead().add(book);
+            return new Response<>("Libro añadido a tu lista 'Quiero Leer'.", "200", true);
+        } else {
+            // Si falló el guardado en BBDD, devuelve el error del DAO
+            return new Response<>(daoResponse.getMessage(), "500", false);
+        }
+
     }
 
     @Override
@@ -93,6 +121,8 @@ public class UserServiceImpl implements UserService {
     public Response<List<Book>> readSugestions(User user) {
         return null;
     }
+
+
 
 
 }

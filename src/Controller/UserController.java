@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Book;
 import Model.Response;
 import Model.User;
 import Service.UserService;
@@ -78,6 +79,18 @@ public class UserController {
         }else{
             //System.out.println("Error de registro: " +  registerResponse.getMessage());
             view.showErrorMessage(registerResponse.getMessage());
+        }
+
+    }
+
+    public void addBookToWhishlist(User user, Book book) {
+
+        Response<User> response = userService.addBookToWishlist(user, book);
+
+        if(response.getStatus()){
+            ((AuthView) view).showSuccessMessage(response.getMessage());
+        }else{
+            ((AuthView) view).showErrorMessage(response.getMessage());
         }
 
     }

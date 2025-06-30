@@ -1,13 +1,16 @@
 package View;
 
+import Controller.BookController;
 import Controller.UserController;
+import Model.Book;
 import Model.User;
 import java.awt.CardLayout;
+import java.util.List;
 import javax.swing.JFrame;
 
 //Mi clase Frame utiliza la interfaz AuthView que tiene 
 //3 metodos que ayudan al flujo de las vistas
-public class Frame extends javax.swing.JFrame implements AuthView{
+public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
 
     //El card layout es el que se encarga de manejar las vistas
     private final CardLayout cardLayout;
@@ -16,9 +19,12 @@ public class Frame extends javax.swing.JFrame implements AuthView{
     private LoginPanel loginPanel;
     private RegisterPanel registerPanel;
     private HomePanel homePanel;
+    private BookController  bookController;
  
     
-       public Frame(UserController userController) {
+       public Frame(UserController userController,  BookController bookController) {
+
+        initComponents();
 
         //Configuracion básica del JFrame
         setTitle("Buenas Lecturas");
@@ -31,7 +37,7 @@ public class Frame extends javax.swing.JFrame implements AuthView{
         //Instancio los paneles
         loginPanel = new LoginPanel(this, userController);
         registerPanel = new RegisterPanel(this, userController);
-        homePanel = new HomePanel(this, userController);
+        homePanel = new HomePanel(this, userController, bookController);
 
         //Añadi los paneles al contentPane
         getContentPane().add(loginPanel, "LOGIN_PANEL");
@@ -69,6 +75,14 @@ public class Frame extends javax.swing.JFrame implements AuthView{
         
         //Accedo al metodo show panel y le paso el nombre del panel home
         this.showPanel("HOME_PANEL");
+    }
+    
+    @Override
+    public void displaySearchResults(List<Book> books) {
+       // El Frame recibe la orden, pero se la pasa al panel correcto.
+        if (homePanel != null) {
+            homePanel.updateResultsList(books);
+        }
     }
     
     
@@ -113,6 +127,8 @@ public class Frame extends javax.swing.JFrame implements AuthView{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

@@ -14,6 +14,7 @@ public class User {
     private ArrayList<Author> suggestions;
 
 
+
     public User(int id, String name, String email, String password) {
         this.id = id;
         this.name = name;
@@ -65,7 +66,27 @@ public class User {
         this.password = password;
     }
 
+    public ArrayList<Book> getReadBooks() {
+        return readBooks;
+    }
 
+    public void setReadBooks(ArrayList<Book> readBooks) {
+        this.readBooks = readBooks;
+    }
 
+    public ArrayList<Book> getWantToRead() {
+        return wantToRead;
+    }
 
+    public void setWantToRead(ArrayList<Book> wantToRead) {
+        this.wantToRead = wantToRead;
+    }
+
+    public ArrayList<Author> getSuggestions() {
+        return suggestions;
+    }
+
+    public void setSuggestions(ArrayList<Author> suggestions) {
+        this.suggestions = suggestions;
+    }
 }

@@ -2,6 +2,7 @@ package Controller;
 
 import Service.BookService;
 import View.HomePanel;
+import View.HomeView;
 
 import javax.swing.*;
 
@@ -11,17 +12,20 @@ public class BookController {
     private final BookService bookService;
 
     //Dependencia con la vista
-    private HomePanel view;
+    private HomeView view;
 
     public BookController(BookService bookService) {
         this.bookService = bookService;
     }
 
-    public void setView(HomePanel view) {
+    public void setView(HomeView view) {
         this.view = view;
     }
 
     public void handleSearch(String query){
+
+        System.out.println("2. BookController recibió la orden de búsqueda.");
+
 
         //Validacion
         if (query == null || query.trim().isEmpty()) {
@@ -31,11 +35,14 @@ public class BookController {
 
         // Llama al servicio. La operación es asíncrona.
         bookService.searchBookByTitle(query).thenAccept(books -> {
+            System.out.println("5. Respuesta de la API recibida y procesada. Libros encontrados: " + books.size());
             SwingUtilities.invokeLater(() -> {
                 // Llama al método que acabas de crear en HomePanel
-                view.updateResultsList(books);
+                System.out.println("6. Actualizando la vista (JList).");
+                view.displaySearchResults(books);
             });
         });
+        System.out.println("3. Petición al servicio enviada (asíncrona). El código continúa...");
 
 
     }

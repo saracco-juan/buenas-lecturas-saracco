@@ -207,6 +207,7 @@ public class UserDao extends BaseDAO<User> {
             }
 
         }
+
     //Metodo para buscar un usuario en la BBDD por email
     public Response<User> findByEmail(String email){
         String sql = "SELECT * FROM app_user WHERE email = ?";
@@ -239,6 +240,48 @@ public class UserDao extends BaseDAO<User> {
         }catch (SQLException e){
             return new Response<>("Error al obtener el usuario: " + e.getMessage(), "500", false);
         }
+    }
+
+
+    public Response<?> addBookToWishlist(int userId, String workId) {
+        // ASUMO que tienes una tabla de relación llamada 'user_books'
+        // con columnas 'user_id', 'book_isbn', y 'list_type'
+        String sql = "INSERT INTO user_books (user_id, book_isbn, list_type) VALUES (?, ?, ?)";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setString(2, workId);
+            ps.setString(3, "WANT_TO_READ"); // Un identificador para la lista
+
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                return new Response<>("Relación creada en BBDD", "201", true);
+            } else {
+                return new Response<>("No se pudo crear la relación en BBDD", "500", false);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Response<>("Error de SQL: " + e.getMessage(), "500", false);
+        }
+    }
+
+    public List<String> getBookIsbnsForList(int userId, String listType) {
+        String sql = "SELECT book_isbn FROM user_books WHERE user_id = ? AND list_type = ?";
+        List<String> isbns = new ArrayList<>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setString(2, listType);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                isbns.add(rs.getString("book_isbn"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isbns;
     }
 }
 

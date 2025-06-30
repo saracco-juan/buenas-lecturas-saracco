@@ -5,7 +5,7 @@ import Enum.Genre;
 
 public class Book {
 
-    private String ISBN;
+    private String workId;
     private String name;
     private String authorName;
     private Genre genre;
@@ -14,14 +14,14 @@ public class Book {
     private Date publishDate;
     private String imageURL;
 
-    public Book(String ISBN, String name, String authorName){
-        this.ISBN = ISBN;
+    public Book(String workId, String name, String authorName){
+        this.workId = workId;
         this.name = name;
         this.authorName = authorName;
     }
 
-    public Book(String ISBN, String name, String authorName, Genre genre, String summary, String numberOfPages, Date publishDate, String imageURL) {
-        this.ISBN = ISBN;
+    public Book(String workId, String name, String authorName, Genre genre, String summary, String numberOfPages, Date publishDate, String imageURL) {
+        this.workId = workId;
         this.name = name;
         this.authorName = authorName;
         this.genre = genre;
@@ -31,16 +31,24 @@ public class Book {
         this.imageURL = imageURL;
     }
 
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
+    public String getWorkId() {
+        return workId;
+    }
+
+    public void setWorkId(String workId) {
+        this.workId = workId;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setAuthor(String author) {
-        this.authorName = authorName;
     }
 
     public void setGenre(Genre genre) {
@@ -63,16 +71,10 @@ public class Book {
         this.imageURL = imageURL;
     }
 
-    public String getISBN() {
-        return ISBN;
-    }
+
 
     public String getName() {
         return name;
-    }
-
-    public String getAuthor() {
-        return authorName;
     }
 
     public Genre getGenre() {
@@ -94,4 +96,27 @@ public class Book {
     public String getImageURL() {
         return imageURL;
     }
+
+    @Override
+    public String toString() {
+        // Aquí puedes personalizar cómo se ve.
+        // La forma "Título - Autor" es una excelente opción.
+        return this.getName() + " - " + this.getAuthorName() + " - " + this.getWorkId();
+    }
+
+    // También es CRUCIAL implementar equals() y hashCode() para que las listas funcionen bien.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return java.util.Objects.equals(getWorkId(), book.getWorkId()); // Comparamos por ISBN, que es único.
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(getWorkId());
+    }
 }
+
+

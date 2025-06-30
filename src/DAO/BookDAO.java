@@ -38,6 +38,9 @@ public class BookDAO {
         String encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8);
         String url = "https://openlibrary.org/search.json?q=" + encodedTitle;
 
+        System.out.println("4. BookRepository va a llamar a la API con la URL: " + url);
+
+
         //Delego la llamado al APIclient
        return apiClient.getAsync(url)
                .thenApply(jsonBody -> {
@@ -57,17 +60,25 @@ public class BookDAO {
                            // Por cada elemento en el array "docs", creamos un objeto Book.
 
                            // Extraemos los campos que nos interesan. Usamos .path() que no lanza error si el campo no existe.
-                           String bookTitle = bookNode.path("title").asText();
-                           String isbn = bookNode.path("isbn").get(0).asText(); // ISBN es un array, tomamos el primero.
+                           String workId = bookNode.path("key").asText(); // <-- Obtiene la clave
+                           String bookTitle = bookNode.path("title").asText("Titulo no disponible");
+                           //String isbn = "N/A";
+
+
+                           //if (bookNode.has("isbn") && bookNode.get("isbn").isArray() && bookNode.get("isbn").size() > 0) {
+                               // 2. Solo si se cumplen las condiciones, obtén el primer elemento.
+                           //    isbn = bookNode.get("isbn").get(0).asText();
+                           //}
 
                            // El autor también es un array.
                            String authorName = "Desconocido";
-                           if (bookNode.has("author_name")) {
-                               authorName = bookNode.path("author_name").get(0).asText();
+
+                           if (bookNode.has("author_name") && bookNode.get("author_name").isArray() && bookNode.get("author_name").size() > 0) {
+                               authorName = bookNode.get("author_name").get(0).asText();
                            }
 
                            // Creamos la instancia del libro. (Asegúrate de tener un constructor adecuado en tu clase Book).
-                           Book book = new Book(isbn, bookTitle, authorName);
+                           Book book = new Book(workId, bookTitle, authorName);
                            books.add(book);
                        }
                        return books;

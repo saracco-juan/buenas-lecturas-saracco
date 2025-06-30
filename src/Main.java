@@ -1,6 +1,9 @@
 import Config.ConnectionDB;
+import Controller.BookController;
 import Controller.UserController;
+import DAO.BookDAO;
 import DAO.UserDao;
+import Service.BookService;
 import Service.UserService;
 import Service.UserServiceImpl;
 import View.Frame;
@@ -25,13 +28,18 @@ public class Main {
             UserDao userDao = new UserDao(connection);
             UserService userService = new UserServiceImpl(userDao);
             UserController userController = new UserController(userService);
+
+            BookDAO bookDAO = new BookDAO();
+            BookService bookService = new BookService(bookDAO);
+            BookController bookController = new BookController(bookService);
             
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
 
-                    Frame mainFrame = new Frame(userController);
+                    Frame mainFrame = new Frame(userController, bookController);
 
                     userController.setView(mainFrame);
+                    bookController.setView(mainFrame);
 
                     mainFrame.setVisible(true);
                 }
