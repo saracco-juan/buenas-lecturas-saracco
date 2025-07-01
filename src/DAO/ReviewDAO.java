@@ -6,8 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//Clase que hereda de baseDAO
 public class ReviewDAO extends BaseDAO<Review> {
 
+    //Accedo a la conexion a traves del constructor del padre
     public ReviewDAO(Connection conn) {
         super(conn);
     }
@@ -167,7 +169,7 @@ public class ReviewDAO extends BaseDAO<Review> {
             return new Response<>("ERROR: Error SQL al buscar reseñas por usuario: " + e.getMessage(), "500", false, null);
         }
     }
-    
+
 
     private Review buildReviewFromResultSet(ResultSet rs) throws SQLException {
 
