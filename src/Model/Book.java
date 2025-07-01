@@ -5,32 +5,20 @@ import Enum.Genre;
 
 public class Book {
 
+    //Atirbutos del objeto libro
     private String workId;
     private String name;
     private String authorName;
-    private Genre genre;
-    private String summary;
-    private String numberOfPages;
-    private Date publishDate;
-    private String imageURL;
+
     private Review review;
 
+    //Constructor
     public Book(String workId, String name, String authorName){
         this.workId = workId;
         this.name = name;
         this.authorName = authorName;
     }
 
-    public Book(String workId, String name, String authorName, Genre genre, String summary, String numberOfPages, Date publishDate, String imageURL) {
-        this.workId = workId;
-        this.name = name;
-        this.authorName = authorName;
-        this.genre = genre;
-        this.summary = summary;
-        this.numberOfPages = numberOfPages;
-        this.publishDate = publishDate;
-        this.imageURL = imageURL;
-    }
 
     public Review getReview() {
         return review;
@@ -60,68 +48,30 @@ public class Book {
         this.name = name;
     }
 
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public void setNumberOfPages(String numberOfPages) {
-        this.numberOfPages = numberOfPages;
-    }
-
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
-
-
-
     public String getName() {
         return name;
     }
 
-    public Genre getGenre() {
-        return genre;
-    }
 
-    public String getSummary() {
-        return summary;
-    }
-
-    public String getNumberOfPages() {
-        return numberOfPages;
-    }
-
-    public Date getPublishDate() {
-        return publishDate;
-    }
-
-    public String getImageURL() {
-        return imageURL;
-    }
-
+    //Metodo toString para visualizar el objeto
     @Override
     public String toString() {
-        // Aquí puedes personalizar cómo se ve.
-        // La forma "Título - Autor" es una excelente opción.
         return this.getName() + " - " + this.getAuthorName(); // opcion para ver el ISBN -> + " - " + this.getWorkId();
     }
 
-    // También es CRUCIAL implementar equals() y hashCode() para que las listas funcionen bien.
+    //Este metodo define cuando objetos se consideran iguales ("this" vs "o" pasado por parametro)
     @Override
     public boolean equals(Object o) {
+        //Si son iguales retorno true
         if (this == o) return true;
+        //Si o es null o no es el del tipo Book (this.getClass), retorno false
         if (o == null || getClass() != o.getClass()) return false;
+        //Por ultimo casteo el objeto "o" a tipo libro y comparo su workId (isbn)
         Book book = (Book) o;
-        return java.util.Objects.equals(getWorkId(), book.getWorkId()); // Comparamos por ISBN, que es único.
+        return java.util.Objects.equals(getWorkId(), book.getWorkId());
     }
 
+    //Este metodo genera un hashCode basado en WorkId (ISBN)
     @Override
     public int hashCode() {
         return java.util.Objects.hash(getWorkId());

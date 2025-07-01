@@ -5,19 +5,18 @@ import java.util.ArrayList;
 
 public class User {
 
+    //Atributos
     private int id;
     private String name;
     private String email;
     private String password;
+
+    //Listas
     private ArrayList<Book> readBooks;
     private ArrayList<Book> wantToRead;
-    private ArrayList<Author> suggestions;
+    private ArrayList<Book> suggestions;
 
-    private Review review;
-
-
-
-
+    //Constructor
     public User(int id, String name, String email, String password) {
         this.id = id;
         this.name = name;
@@ -25,7 +24,7 @@ public class User {
         this.password = password;
     }
 
-    //Asi construyo mi objeto en el metodo register del servicio
+    //Constructor sobrecarga (Asi construyo mi objeto en el metodo register del servicio)
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
@@ -37,13 +36,7 @@ public class User {
 
     }
 
-    public Review getReview() {
-        return review;
-    }
-
-    public void setReview(Review review) {
-        this.review = review;
-    }
+    //Getters y setters
 
     public int getId() {
         return id;
@@ -93,11 +86,11 @@ public class User {
         this.wantToRead = wantToRead;
     }
 
-    public ArrayList<Author> getSuggestions() {
+    public ArrayList<Book> getSuggestions() {
         return suggestions;
     }
 
-    public void setSuggestions(ArrayList<Author> suggestions) {
+    public void setSuggestions(ArrayList<Book> suggestions) {
         this.suggestions = suggestions;
     }
 }

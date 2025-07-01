@@ -4,18 +4,15 @@ import java.time.LocalDateTime;
 
 public class Review {
 
+    //Atributos
     private long id;
     private long userId;
-    private String bookWorkId; // Coincide con la columna BOOK_ISBN que almacena el Work ID
-    private Integer rating;    // Usamos Integer para permitir nulls, representa la calificación de 1-5
+    private String bookWorkId;
+    private Integer rating;
     private String comment;
     private LocalDateTime createdAt;
 
-    // Constructor vacío
-    public Review() {
-    }
-
-    // Getters y Setters...
+    //Getters y Setters
 
     public long getId() {
         return id;
