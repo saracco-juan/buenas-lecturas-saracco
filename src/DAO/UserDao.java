@@ -11,15 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Clase que hereda de baseDAO
-@SuppressWarnings("ALL")
 public class UserDao extends BaseDAO<User> {
 
     // Acceso a la conexion a traves del constructor del padre (BaseDAO)
     public UserDao(Connection conn) {
         super(conn);
     }
-
-    //Los primeros tres metodos son muy similares entre ellos
 
     // Metodo para insertar un nuevo usuario en la BBDD. Recibe un usuario 'o'
     @Override
@@ -167,13 +164,6 @@ public class UserDao extends BaseDAO<User> {
 
     }
 
-
-
-    //Me quede aca clase 27/05!!
-
-
-
-
     // Metodo para leer todos los usuarios de la BBDD
     @Override
     public Response<List<User>> readAll() {
@@ -267,23 +257,6 @@ public class UserDao extends BaseDAO<User> {
             return new Response<>("Error de SQL: " + e.getMessage(), "500", false);
         }
     }
-
-//    public List<String> getBookIsbnsForList(int userId, String listType) {
-//        String sql = "SELECT book_isbn FROM user_books WHERE user_id = ? AND list_type = ?";
-//        List<String> isbns = new ArrayList<>();
-//        try {
-//            PreparedStatement ps = conn.prepareStatement(sql);
-//            ps.setInt(1, userId);
-//            ps.setString(2, listType);
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                isbns.add(rs.getString("book_isbn"));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return isbns;
-//    }
 
     public List<String> getBookKeysForList(int userId, String listType) {
         // CAMBIA "book_work_id" a "book_isbn" para que coincida con tu tabla

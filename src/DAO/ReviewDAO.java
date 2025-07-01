@@ -12,41 +12,12 @@ public class ReviewDAO extends BaseDAO<Review> {
         super(conn);
     }
 
-    /**
-     * Guarda una reseña nueva (INSERT) o actualiza una existente (UPDATE).
-     * Primero busca si ya existe una reseña para ese usuario y libro.
-     * Es el método más recomendado para usar desde el servicio.
-     * @param review El objeto Review a guardar o actualizar.
-     * @return Una respuesta con el estado de la operación.
-     */
-    public Response<Review> saveOrUpdate(Review review) {
-        // Primero, verificamos si ya existe una reseña para este usuario y libro
-        String checkSql = "SELECT ID FROM REVIEWS WHERE USER_ID = ? AND BOOK_ISBN = ?";
-        try (PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
-            checkPs.setLong(1, review.getUserId());
-            checkPs.setString(2, review.getBookWorkId());
-            ResultSet rs = checkPs.executeQuery();
-
-            if (rs.next()) {
-                // La reseña ya existe, así que la actualizamos
-                long existingId = rs.getLong("ID");
-                review.setId(existingId);
-                return update(review);
-            } else {
-                // La reseña no existe, así que la creamos
-                return create(review);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al verificar la existencia de la reseña.");
-            e.printStackTrace();
-            return new Response<>("Error de BBDD al verificar la reseña: " + e.getMessage(), "500", false, null);
-        }
-    }
-
     @Override
     public Response<Review> create(Review review) {
-        // Nota: usamos BOOK_ISBN porque así se llama la columna en tu tabla
+        //Armo al consulta
         String sql = "INSERT INTO REVIEWS (USER_ID, BOOK_ISBN, RATING, COMMENT, CREATED_AT) VALUES (?, ?, ?, ?, ?)";
+
+        //En esta linea preparo la consulta con prepareStatement y le indico que voy a recuperar los ID
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setLong(1, review.getUserId());
             ps.setString(2, review.getBookWorkId());
@@ -74,6 +45,7 @@ public class ReviewDAO extends BaseDAO<Review> {
 
     @Override
     public Response<Review> update(Review review) {
+        //Este metodo funciona muy similar al create
         String sql = "UPDATE REVIEWS SET RATING = ?, COMMENT = ?, CREATED_AT = ? WHERE ID = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, review.getRating());
@@ -96,7 +68,7 @@ public class ReviewDAO extends BaseDAO<Review> {
 
     @Override
     public Response<Review> delete(int id) {
-        // Implementación estándar de borrado, por si la necesitas
+        //Metodo para eliminar una review de la BBDD
         String sql = "DELETE FROM REVIEWS WHERE ID = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -114,30 +86,72 @@ public class ReviewDAO extends BaseDAO<Review> {
 
     @Override
     public Response<Review> read(int id) {
-        // En este DAO es más útil buscar por usuario y libro
-        // Pero implementamos el read por ID para cumplir con ICrud
-        String sql = "SELECT * FROM REVIEWS WHERE ID = ?";
-        try(PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                Review review = buildReviewFromResultSet(rs);
-                return new Response<>("Reseña encontrada", "200", true, review);
+//        //Implemente el read por ID para cumplir con ICrud
+//        String sql = "SELECT * FROM REVIEWS WHERE ID = ?";
+//        try(PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setInt(1, id);
+//            ResultSet rs = ps.executeQuery();
+//            if(rs.next()){
+//                Review review = buildReviewFromResultSet(rs);
+//                return new Response<>("Reseña encontrada", "200", true, review);
+//            } else {
+//                return new Response<>("Reseña no encontrada", "404", false, null);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return new Response<>("Error SQL al leer la reseña: " + e.getMessage(), "500", false, null);
+//        }
+
+        return null;
+    }
+
+    @Override
+    public Response<List<Review>> readAll() {
+//        //Implemente para cumplir con ICrud
+//        String sql = "SELECT * FROM REVIEWS";
+//        List<Review> reviews = new ArrayList<>();
+//        try(PreparedStatement ps = conn.prepareStatement(sql);
+//            ResultSet rs = ps.executeQuery()){
+//            while(rs.next()){
+//                reviews.add(buildReviewFromResultSet(rs));
+//            }
+//            return new Response<List<Review>>("Todas las reseñas recuperadas.", "200", true, reviews);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return new Response<>("Error SQL al leer todas las reseñas: " + e.getMessage(), "500", false, null);
+//        }
+
+        return null;
+
+    }
+
+
+    public Response<Review> saveOrUpdate(Review review) {
+        //Verifico si ya existe una reseña para este usuario y libro
+        String checkSql = "SELECT ID FROM REVIEWS WHERE USER_ID = ? AND BOOK_ISBN = ?";
+        try (PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
+            checkPs.setLong(1, review.getUserId());
+            checkPs.setString(2, review.getBookWorkId());
+            ResultSet rs = checkPs.executeQuery();
+
+            if (rs.next()) {
+                //Si la reseña existe (rs.next = true), la actualizo
+                long existingId = rs.getLong("ID");
+                review.setId(existingId);
+                //llamo al metodo update
+                return update(review);
             } else {
-                return new Response<>("Reseña no encontrada", "404", false, null);
+                // La reseña no existe, entonces la creo. LLamo al metodo create
+                return create(review);
             }
         } catch (SQLException e) {
+            System.out.println("Error al verificar la existencia de la reseña.");
             e.printStackTrace();
-            return new Response<>("Error SQL al leer la reseña: " + e.getMessage(), "500", false, null);
+            return new Response<>("Error de BBDD al verificar la reseña: " + e.getMessage(), "500", false, null);
         }
     }
 
-    /**
-     * Busca todas las reseñas de un usuario específico.
-     * Muy eficiente para cargar todas las reseñas del usuario al iniciar sesión.
-     * @param userId El ID del usuario.
-     * @return Una respuesta con la lista de reseñas.
-     */
+
     public Response<List<Review>> findAllByUserId(long userId) {
         String sql = "SELECT * FROM REVIEWS WHERE USER_ID = ?";
         List<Review> reviews = new ArrayList<>();
@@ -150,33 +164,15 @@ public class ReviewDAO extends BaseDAO<Review> {
             return new Response<List<Review>>("Reseñas del usuario recuperadas.", "200", true, reviews);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Response<>("Error SQL al buscar reseñas por usuario: " + e.getMessage(), "500", false, null);
+            return new Response<>("ERROR: Error SQL al buscar reseñas por usuario: " + e.getMessage(), "500", false, null);
         }
     }
+    
 
-    @Override
-    public Response<List<Review>> readAll() {
-        // Generalmente no es útil leer TODAS las reseñas de la BBDD,
-        // pero se implementa para cumplir con la interfaz ICrud.
-        String sql = "SELECT * FROM REVIEWS";
-        List<Review> reviews = new ArrayList<>();
-        try(PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery()){
-            while(rs.next()){
-                reviews.add(buildReviewFromResultSet(rs));
-            }
-            return new Response<List<Review>>("Todas las reseñas recuperadas.", "200", true, reviews);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return new Response<>("Error SQL al leer todas las reseñas: " + e.getMessage(), "500", false, null);
-        }
-    }
-
-    /**
-     * Método helper para construir un objeto Review desde un ResultSet
-     * para evitar la duplicación de código.
-     */
     private Review buildReviewFromResultSet(ResultSet rs) throws SQLException {
+
+        //Este metodo lo utilizo para construir un objeto review a partir de una Result set
+
         Review review = new Review();
         review.setId(rs.getLong("ID"));
         review.setUserId(rs.getLong("USER_ID"));
