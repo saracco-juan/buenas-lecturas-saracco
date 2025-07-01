@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.concurrent.CompletableFuture;
 
+//Chequear, es correcto tener todo lo de autor menos el modelo?
 public class AuthorDAO {
 
     private final APIClient apiClient;
@@ -16,14 +17,21 @@ public class AuthorDAO {
         this.objectMapper = new ObjectMapper();
     }
 
+    //Metodo para buscar el nombre de un author a traves de su key
     public CompletableFuture<String> findAuthorNameByKey(String authorKey) {
+        //Armo la url ---> (se podria mejorar con encode?)
         String url = "https://openlibrary.org" + authorKey + ".json";
+        //Ejecuto la peticion
         return apiClient.getAsync(url)
                 .thenApply(jsonBody -> {
-                    if (jsonBody == null) return "Desconocido";
+                    if (jsonBody == null){
+                        System.out.println("ERRO: El JsonBody es NULL (FindAuthorNameByKey)");
+                        return "Desconocido";
+                    }
                     try {
+                        //Parseo el JSON
                         JsonNode authorNode = objectMapper.readTree(jsonBody);
-                        // El nombre está en el campo "name"
+                        //El nombre está en el campo nam del nodo author"
                         return authorNode.path("name").asText("Desconocido");
                     } catch (Exception e) {
                         e.printStackTrace();

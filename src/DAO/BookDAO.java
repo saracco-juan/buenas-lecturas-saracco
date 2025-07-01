@@ -2,7 +2,6 @@ package DAO;
 
 import API.APIClient;
 import Model.Book;
-
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -18,66 +17,75 @@ public class BookDAO {
     private final APIClient apiClient;
     //Dependecia que me va a permitir pasar los objetos JSON a objetos JAVA
     private final ObjectMapper objectMapper;
-
+    //Dependencia que me va a permitir interactuar con los autores
     private final AuthorDAO authorDAO;
 
-    //Al crear la clase, instancio el api client y el object mapper
+    //Al crear la clase, instancio el api client, el object mapper y el AuthorDAO
     public BookDAO() {
         this.apiClient = new APIClient(); // Crea la instancia
         this.objectMapper = new ObjectMapper();
         this.authorDAO = new AuthorDAO();
     }
 
-    //Metodo para buscar libro por titulo
+    //Ambos metodos devuleven una promesa de una lista de libros que se va a completar de forma asincrona
+
+    //Metodo para buscar libro, recibe el titulo del libro por parametro
     public CompletableFuture<List<Book>> searchByTitle(String title){
 
-        // 1. Construir la URL de forma segura (codificando el título)
+        //Construyo la URL codificando el títul. Esto hace mas amigables las busquedas por URL
         String encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8);
+        //Con esta url + el titulo codificado armo lo que va a ser la peticion
         String url = "https://openlibrary.org/search.json?q=" + encodedTitle;
 
-        System.out.println("4. BookRepository va a llamar a la API con la URL: " + url);
+        //test
+        //System.out.println("BookDAO llama a la API con la URL: " + url);
 
-
-        //Delego la llamado al APIclient
+        //Utilizo el apiClient para hacer la peticion
        return apiClient.getAsync(url)
                .thenApply(jsonBody -> {
 
                    //Validacion por si falla la peticion
                    if(jsonBody == null){
+                       //Si falla devuelvo una lista vacia
+                       //System.out.println("ERROR: no se pudo realizar la peticion");
                        return Collections.emptyList();
                    }
 
                    //Parseo el String JSON a un objeto Java
                    try {
+                       //Inicializo la lista que voy a querer retornar
                        List<Book> books = new ArrayList<>();
+
+                       //Leo el JSON
                        JsonNode rootNode = objectMapper.readTree(jsonBody);
-                       JsonNode docsNode = rootNode.path("docs"); // "docs" es el array que contiene los resultados
+                        //"docs" es el array que contiene los resultados
+                       JsonNode docsNode = rootNode.path("docs");
 
+                       //Recorro ese docsNode
                        for (JsonNode bookNode : docsNode) {
-                           // Por cada elemento en el array "docs", creamos un objeto Book.
+                           //Por cada elemento en el array "docs", creo un objeto Book
 
-                           // Extraemos los campos que nos interesan. Usamos .path() que no lanza error si el campo no existe.
-                           String workId = bookNode.path("key").asText(); // <-- Obtiene la clave
+                           //Extraigo los campos workID y BookTitle. Use .path() que no lanza error si el campo no existe
+                           String workId = bookNode.path("key").asText();
                            String bookTitle = bookNode.path("title").asText("Titulo no disponible");
-                           //String isbn = "N/A";
 
-
-                           //if (bookNode.has("isbn") && bookNode.get("isbn").isArray() && bookNode.get("isbn").size() > 0) {
-                               // 2. Solo si se cumplen las condiciones, obtén el primer elemento.
-                           //    isbn = bookNode.get("isbn").get(0).asText();
-                           //}
-
-                           // El autor también es un array.
+                           //El autor tambien es un array. Lo inicializo en desonocido por si no lo encuentro
                            String authorName = "Desconocido";
 
+                           //Si encuentro un autor lo seteo en la variable authorName
                            if (bookNode.has("author_name") && bookNode.get("author_name").isArray() && bookNode.get("author_name").size() > 0) {
                                authorName = bookNode.get("author_name").get(0).asText();
+                           }else{
+                               //Test
+                               //System.out.println("No se encontro el author");
                            }
 
-                           // Creamos la instancia del libro. (Asegúrate de tener un constructor adecuado en tu clase Book).
+                           //Creo la instancia del libro
                            Book book = new Book(workId, bookTitle, authorName);
+                           //Lo añado a la lista que voy a retornar
                            books.add(book);
                        }
+                       //Retorno la lista
                        return books;
 
                    } catch (Exception e) {
@@ -87,53 +95,43 @@ public class BookDAO {
                });
     }
 
-    //Metodo para buscar libro por key
+    //Metodo para buscar libro, recive la "Key" por parametro
     public CompletableFuture<Book> findByKey(String key) {
         // La URL se construye a partir de la clave
         String url = "https://openlibrary.org" + key + ".json";
 
-//        return apiClient.getAsync(url)
-//                .thenApply(jsonBody -> {
-//                    if (jsonBody == null) return null;
-//                    try {
-//                        JsonNode bookNode = objectMapper.readTree(jsonBody);
-//                        // Parseamos los detalles de este libro único
-//                        String title = bookNode.path("title").asText("Sin Título");
-//                        // ... podrías obtener más detalles aquí ...
-//
-//                        // Necesitamos el nombre del autor, que puede requerir otra llamada o parseo complejo
-//                        String authorName = "Desconocido"; // Simplificación
-//
-//                        return new Book(key, title, authorName);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        return null;
-//                    }
-//                });
+        //Utilizo el apiClient para hacer la peticion
         return apiClient.getAsync(url)
-                .thenCompose(jsonBody -> { // ¡Usamos thenCompose para encadenar futuros!
+                //Then compose me permite encadenar otra peticion asincronica
+                .thenCompose(jsonBody -> {
                     if (jsonBody == null) {
-                        // Si la primera llamada falla, devolvemos un futuro completado con null.
+                        // Si la primera llamada falla, devuelvo null
+                        //Test
+                        System.out.println("ERROR: Error al realizar la peticion (.thenCompose)");
                         return CompletableFuture.completedFuture(null);
                     }
                     try {
+                        //Pareseo el objeto Json
                         JsonNode bookNode = objectMapper.readTree(jsonBody);
+                        //Extraigo el campo title, si es nulo le paso un valor por defecto
                         String title = bookNode.path("title").asText("Sin Título");
 
-                        // 1. Extraer la clave del autor del JSON del libro.
+                        //Extraigo la key del autor del JSON del libro.
                         JsonNode authorNode = bookNode.path("authors").get(0).path("author").path("key");
+                        //Guardo la key del autor en una variable
                         String authorKey = authorNode.asText();
 
+                        // Si no hay autor, creamos el libro con autor desconocido
                         if (authorKey.isEmpty()) {
-                            // Si no hay autor, creamos el libro con "Desconocido".
                             Book book = new Book(key, title, "Desconocido");
+                            //Retorno la promesa completada con el objeto book que buscaba
                             return CompletableFuture.completedFuture(book);
                         }
 
-                        // 2. Usamos esa clave para buscar el nombre del autor. Esto devuelve OTRO futuro.
+                        //Uso esa clave para buscar el nombre del autor. Esto devuelve OTRO futuro.
                         CompletableFuture<String> authorNameFuture = authorDAO.findAuthorNameByKey(authorKey);
 
-                        // 3. Cuando el futuro del nombre del autor se complete, creamos el objeto Book.
+                        //Cuando el futuro del nombre del autor se complete, creo el objeto Book.
                         return authorNameFuture.thenApply(authorName -> new Book(key, title, authorName));
 
                     } catch (Exception e) {

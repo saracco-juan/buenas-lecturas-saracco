@@ -2,7 +2,6 @@ package DAO;
 
 import Model.Response;
 import Model.Review;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
