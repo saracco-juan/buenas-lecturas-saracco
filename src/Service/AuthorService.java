@@ -13,7 +13,7 @@ public class AuthorService {
     }
 
     public CompletableFuture<String> findAuthorNameByKey(String authorKey) {
-        // Simplemente delega la llamada al repositorio
+        //Delega la llamada al repositorio
         return authorDAO.findAuthorNameByKey(authorKey);
     }
 }

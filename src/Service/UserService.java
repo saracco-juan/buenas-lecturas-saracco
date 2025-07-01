@@ -6,7 +6,7 @@ import Model.User;
 
 import java.util.List;
 
-//Esta interfaz la va a utilizar mi UserServiceImpl (implementacion)
+//Refactorizar
 public interface UserService {
 
      Response<User> login(String username, String password);
