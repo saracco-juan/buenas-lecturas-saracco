@@ -4,7 +4,7 @@ Requisitos Previos Tener JDK 24 instalado.
 
 1. Clonar el repo (IntelliJ tiene un boton que nos permite clonar el repo con UI)
    URL: https://github.com/saracco-juan/buenas-lecturas-saracco
-2. Instalar H2 DataBase
+2. Instalar H2 DataBase (En caso de tenerlo instalado, omitir este paso)
   URL: https://www.h2database.com/html/main.html
 3. Volver al IDE, ir a File > Project Structure > Modules
 4. Seleccionar el proyecto y apretar Dependencies (Al lado de Sources y Paths en InteliJ)
@@ -44,3 +44,13 @@ CREATE TABLE REVIEWS (
 );
 
 8. Una vez terminado esto correr el main.
+
+9. Comentario adicional:
+
+    El proyecto tiene agregadas 3 librerias adicionales (revisar carpeta lib). Al clonarlo deberia cargarlas correctamente, en caso de algun tipo    de error dejo adjunto los links de descarga.
+
+   https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.17.0/
+   https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.17.0/
+   https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.17.0/
+
+   Descargar la version 2.17.0.jar de los tres y repetir el paso 5 para añadirlas.
