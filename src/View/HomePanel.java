@@ -9,7 +9,6 @@ import Controller.BookController;
 import Controller.UserController;
 import Model.Book;
 import Model.User;
-import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.*;
 
@@ -17,11 +16,11 @@ import javax.swing.*;
 public class HomePanel extends JPanel {
 
    //Dependencias con el main frame
-   private Frame mainFrame;
+   private final Frame mainFrame;
 
    //Dependencia a los controladores
-   private UserController userController;
-   private BookController bookController;
+   private final UserController userController;
+   private final BookController bookController;
 
    //Seteo el usuario
    private User currentUser;
@@ -38,51 +37,15 @@ public class HomePanel extends JPanel {
         //Creo un modelo de lista que va a tener objetos de tipo Book
         DefaultListModel<Book> initialModel = new DefaultListModel<>();
         
-        //Asigna el modelo a resultsList
+        //Asigno el modelo a resultsList
         resultsList.setModel(initialModel);
-
-
-        searchButon.addActionListener( new java.awt.event.ActionListener() {
-           
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                handleSearchClick();
-            }
-            
-        });
         
         //Habilito o deshabilito el boton segun la selección en la lista
         resultsList.addListSelectionListener(e -> {
 
-            //Habilito el botOn solo si algo estA seleccionado
-            addToWhishlistButon.setEnabled(!resultsList.isSelectionEmpty());
+        //Habilito el botOn solo si algo esta seleccionado
+        addToWhishlistButon.setEnabled(!resultsList.isSelectionEmpty());
         });
-     
-        //Accion para el boton de "Añadir a Quiero Leer"
-        addToWhishlistButon.addActionListener(e -> {
-            
-            //System.out.println("Clic en boton "Añadir a Quiero" Leer detectado");
-            
-            //Obtengo el libro seleccionado de la lista
-            Book selectedBook = resultsList.getSelectedValue();
-            
-            //Debug
-            //System.out.println("Libro seleccionado: " + (selectedBook != null ? selectedBook.getName() : "null"));
-            //System.out.println("Usuario actual: " + (currentUser != null ? currentUser.getName() : "null"));
-    
-            if (selectedBook != null && currentUser != null) {
-
-                //Llamo al controlador de usuario
-                userController.addBookToWhishlist(currentUser, selectedBook);
-            }else{
-                System.err.println(" ERROR: El libro o el usuario es null");
-            }
-        });
-        
-        profileButon.addActionListener(e -> {
-          mainFrame.showPanel("PROFILE_PANEL");
-        });
-        
     }
     
     //Seteo el usuario que esta utilizando la aplicacion
@@ -97,26 +60,22 @@ public class HomePanel extends JPanel {
         bookController.handleSearch(query);
     }
     
-     public void showErrorMessage(String message) {
+    public void showErrorMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
      
-     // ... dentro de la clase HomePanel ...
-
-
-  public void updateResultsList(List<Book> books) {
+    public void updateResultsList(List<Book> books) {
 
       DefaultListModel<Book> newModel = new DefaultListModel<>();
 
-      if (books != null && !books.isEmpty()) {
-          for (Book book : books) {
+        if (books != null && !books.isEmpty()) {
+            for (Book book : books) {
               newModel.addElement(book);
-          }
-      }
+            }
+        }
 
-      resultsList.setModel(newModel);
-  }
-
+        resultsList.setModel(newModel);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -149,6 +108,11 @@ public class HomePanel extends JPanel {
         searchButon.setBackground(new java.awt.Color(255, 243, 232));
         searchButon.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         searchButon.setText("Buscar");
+        searchButon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButonActionPerformed(evt);
+            }
+        });
 
         resultsList.setBackground(new java.awt.Color(255, 243, 232));
         resultsList.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
@@ -158,10 +122,20 @@ public class HomePanel extends JPanel {
         addToWhishlistButon.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         addToWhishlistButon.setText("Añadir a quiero leer");
         addToWhishlistButon.setEnabled(false);
+        addToWhishlistButon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addToWhishlistButonActionPerformed(evt);
+            }
+        });
 
         profileButon.setBackground(new java.awt.Color(255, 243, 232));
         profileButon.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         profileButon.setText("Ver mi perfil");
+        profileButon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profileButonActionPerformed(evt);
+            }
+        });
 
         loggoutButton.setBackground(new java.awt.Color(255, 243, 232));
         loggoutButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
@@ -210,6 +184,33 @@ public class HomePanel extends JPanel {
     private void buscarLibroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarLibroMouseClicked
         this.buscarLibro.setText("");
     }//GEN-LAST:event_buscarLibroMouseClicked
+
+    private void searchButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButonActionPerformed
+        handleSearchClick();
+    }//GEN-LAST:event_searchButonActionPerformed
+
+    private void addToWhishlistButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToWhishlistButonActionPerformed
+        //System.out.println("Clic en boton "Añadir a Quiero" Leer detectado");
+            
+            //Obtengo el libro seleccionado de la lista
+            Book selectedBook = resultsList.getSelectedValue();
+            
+            //Debug
+            //System.out.println("Libro seleccionado: " + (selectedBook != null ? selectedBook.getName() : "null"));
+            //System.out.println("Usuario actual: " + (currentUser != null ? currentUser.getName() : "null"));
+    
+            if (selectedBook != null && currentUser != null) {
+
+                //Llamo al controlador de usuario
+                userController.addBookToWhishlist(currentUser, selectedBook);
+            }else{
+                System.err.println(" ERROR: El libro o el usuario es null");
+            }
+    }//GEN-LAST:event_addToWhishlistButonActionPerformed
+
+    private void profileButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButonActionPerformed
+        mainFrame.showPanel("PROFILE_PANEL");
+    }//GEN-LAST:event_profileButonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

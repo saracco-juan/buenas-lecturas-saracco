@@ -8,7 +8,6 @@ package View;
 import Controller.BookController;
 import Model.Book;
 import Model.Review;
-
 import javax.swing.*;
 
 /**

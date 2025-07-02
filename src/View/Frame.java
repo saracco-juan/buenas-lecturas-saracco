@@ -8,7 +8,6 @@ import java.awt.CardLayout;
 import java.util.List;
 import javax.swing.JFrame;
 
-//Mi clase Frame utiliza la interfaz AuthView que tiene metodos que ayudan a manejar las vistas
 public class Frame extends JFrame implements AuthView, HomeView{
 
     //El card layout es el que se encarga de manejar las vistas
@@ -18,19 +17,19 @@ public class Frame extends JFrame implements AuthView, HomeView{
     private User loggedInUser;
     
     //paneles
-    private LoginPanel loginPanel;
-    private RegisterPanel registerPanel;
-    private HomePanel homePanel;
-    private ProfilePanel profilePanel;
-    private ReviewsPanel reviewsPanel;
+    private final LoginPanel loginPanel;
+    private final RegisterPanel registerPanel;
+    private final HomePanel homePanel;
+    private final ProfilePanel profilePanel;
+    private final ReviewsPanel reviewsPanel;
 
     //Controladores
-    private BookController bookController;
+    private final BookController bookController;
     private final UserController userController;
 
     public Frame(UserController userController, BookController bookController) {
            
-        // Guardamos las referencias a los controladores
+        //Guardo las referencias a los controladores
         this.userController = userController;
         this.bookController = bookController;
 
@@ -38,8 +37,8 @@ public class Frame extends JFrame implements AuthView, HomeView{
 
         //Configuro el Jframe
         setTitle("Buenas Lecturas");
-        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //pack();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
         setLocationRelativeTo(null); // Centra la ventana
 
         //Estableci el CardLayout en el Content Pane del Frame
@@ -72,14 +71,12 @@ public class Frame extends JFrame implements AuthView, HomeView{
  
     public void showReviewsPanel(User user) {
         if (reviewsPanel != null) {
-            // 1. Pasa los datos al panel para que se actualice
+            
             reviewsPanel.displayReviews(user);
             
-            // 2. Obtiene el CardLayout y muestra el panel de reseñas
             cardLayout.show(getContentPane(), "REVIEWS_PANEL");
         }
     }
-    
     
     //Metodos de la interfaz
     @Override
@@ -95,7 +92,7 @@ public class Frame extends JFrame implements AuthView, HomeView{
     //Metodo para navegar al home
     @Override
     public void navigateToHome(User user) {
-        //SYSO de test
+        //test
         //System.out.println("Navegando a la pantalla principal para el usuario: " + user.getName());
         
         //Guardo el usuario en el frame
@@ -150,12 +147,17 @@ public class Frame extends JFrame implements AuthView, HomeView{
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
+        setLocation(new java.awt.Point(0, 0));
+        setName("Buenas Lecturas"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1050, 600));
+        setResizable(false);
+        setSize(new java.awt.Dimension(1050, 600));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 600, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

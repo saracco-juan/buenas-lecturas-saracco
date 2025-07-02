@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  */
 public class ProfilePanel extends javax.swing.JPanel {
 
-    private Frame mainFrame;
+    private final Frame mainFrame;
     private User currentUser;
     private BookController bookController;
 
@@ -31,51 +31,44 @@ public class ProfilePanel extends javax.swing.JPanel {
 
     private void initListeners() {
 
-        markAsReadButon.addActionListener(e -> {
+        //No encontre la property para estos eventos
+        
+        wishlistList.addListSelectionListener(e -> {
+        if (!e.getValueIsAdjusting()) {
+            Book selected = wishlistList.getSelectedValue();
 
-            Book selectedBook = wishlistList.getSelectedValue();
+            // Limpio la otra lista
+            readlistList.clearSelection();
 
-            if (selectedBook == null) {
-                JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de la lista 'Quiero Leer'.",
-                    "Ningún libro seleccionado", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+            // Habilito o deshabilito el botón según haya selección
+            markAsReadButon.setEnabled(selected != null);
 
-            if (bookController != null) {
-                bookController.moveBookToReadList(selectedBook);
+            // Desactivo el botón de reseña si algo se seleccionó acá
+            addReviewButton.setEnabled(false);
             }
         });
 
-    deleteButon.addActionListener(e -> handleDeleteBook());
-    homeButon.addActionListener(e -> mainFrame.showPanel("HOME_PANEL"));
-
-
-    addReviewButton.addActionListener(e -> handleReviewAction()); // Suponiendo que tu botón se llama addReviewButton
-
-    viewReviewsButton.addActionListener(e -> {
-        if (currentUser != null) {
-            mainFrame.showReviewsPanel(currentUser);
-            
-        }
-    });
-
-
-
-    // Cuando se selecciona algo en "Leídos"
-    readlistList.addListSelectionListener(e -> {
+        readlistList.addListSelectionListener(e -> {
+        
         if (!e.getValueIsAdjusting()) {
-            boolean isSelected = readlistList.getSelectedIndex() != -1;
-            addReviewButton.setEnabled(isSelected);
-            if (isSelected) {
-                wishlistList.clearSelection();
-                markAsReadButon.setEnabled(false);
-            }
-        }
-    });
+      
+            Book selected = readlistList.getSelectedValue();
+            // Limpio la otra lista
+            wishlistList.clearSelection();
 
-    markAsReadButon.setEnabled(false);
-    addReviewButton.setEnabled(false);
-}
+            // Habilito o deshabilito el botón de reseña
+            addReviewButton.setEnabled(selected != null);
+
+            // Desactivo el botón de marcar como leído
+            markAsReadButon.setEnabled(false);
+            }
+        });
+
+        //Se inicializan disabled
+        markAsReadButon.setEnabled(false);
+        addReviewButton.setEnabled(false);
+ 
+    }
     
     private void handleReviewAction() {
         Book selectedBook = readlistList.getSelectedValue();
@@ -88,7 +81,6 @@ public class ProfilePanel extends javax.swing.JPanel {
         reviewDialog.setVisible(true);
     }
     
-
     private void handleDeleteBook() {
         Book selectedBook = null;
         String listType = null;
@@ -123,14 +115,10 @@ public class ProfilePanel extends javax.swing.JPanel {
     }
     
     public void refreshView(User updatedUser) {
-
         this.currentUser = updatedUser;
-    
-
         updateProfileDisplay();
     }
     
-
     public void setController(BookController bookController) {
         this.bookController = bookController;
     }
@@ -158,11 +146,8 @@ public class ProfilePanel extends javax.swing.JPanel {
         // Actualiza la lista "Leídos"
         updateBookList(readlistList, currentUser.getReadBooks());
         
-        // (En el futuro) Actualiza la lista de "Sugerencias"
-        // ...
     }
     
-
     private void updateBookList(javax.swing.JList<Book> listComponent, List<Book> books) {
         DefaultListModel<Book> model = new DefaultListModel<>();
         if (books != null && !books.isEmpty()) {
@@ -210,6 +195,7 @@ public class ProfilePanel extends javax.swing.JPanel {
 
         wishlistList.setBackground(new java.awt.Color(255, 243, 232));
         wishlistList.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
+        wishlistList.setPreferredSize(null);
         jScrollPane1.setViewportView(wishlistList);
 
         jLabel2.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
@@ -217,6 +203,8 @@ public class ProfilePanel extends javax.swing.JPanel {
 
         readlistList.setBackground(new java.awt.Color(255, 243, 232));
         readlistList.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
+        readlistList.setName(""); // NOI18N
+        readlistList.setPreferredSize(null);
         jScrollPane2.setViewportView(readlistList);
 
         jLabel3.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
@@ -229,27 +217,57 @@ public class ProfilePanel extends javax.swing.JPanel {
         homeButon.setBackground(new java.awt.Color(255, 243, 232));
         homeButon.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         homeButon.setText("Inicio");
+        homeButon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeButonActionPerformed(evt);
+            }
+        });
 
         deleteButon.setBackground(new java.awt.Color(255, 243, 232));
         deleteButon.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         deleteButon.setText("Eliminar seleccionado");
+        deleteButon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButonActionPerformed(evt);
+            }
+        });
 
         markAsReadButon.setBackground(new java.awt.Color(255, 243, 232));
         markAsReadButon.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         markAsReadButon.setText("Marcar como Leído");
+        markAsReadButon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                markAsReadButonActionPerformed(evt);
+            }
+        });
 
         addReviewButton.setBackground(new java.awt.Color(255, 243, 232));
         addReviewButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         addReviewButton.setText("Añadir Reseña");
         addReviewButton.setEnabled(false);
+        addReviewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addReviewButtonActionPerformed(evt);
+            }
+        });
 
         viewReviewsButton.setBackground(new java.awt.Color(255, 243, 232));
         viewReviewsButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         viewReviewsButton.setText("Ver Reseñas");
+        viewReviewsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewReviewsButtonActionPerformed(evt);
+            }
+        });
 
         viewSuggestionsButton.setBackground(new java.awt.Color(255, 243, 232));
         viewSuggestionsButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         viewSuggestionsButton.setText("Ver Sugerencias");
+        viewSuggestionsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewSuggestionsButtonActionPerformed(evt);
+            }
+        });
 
         loggoutButton.setBackground(new java.awt.Color(255, 243, 232));
         loggoutButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
@@ -322,6 +340,44 @@ public class ProfilePanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void markAsReadButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_markAsReadButonActionPerformed
+        Book selectedBook = wishlistList.getSelectedValue();
+
+            if (selectedBook == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de la lista 'Quiero Leer'.",
+                    "Ningún libro seleccionado", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (bookController != null) {
+                bookController.moveBookToReadList(selectedBook);
+            }
+    }//GEN-LAST:event_markAsReadButonActionPerformed
+
+    private void deleteButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButonActionPerformed
+        handleDeleteBook();
+    }//GEN-LAST:event_deleteButonActionPerformed
+
+    private void addReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReviewButtonActionPerformed
+        handleReviewAction();
+    }//GEN-LAST:event_addReviewButtonActionPerformed
+
+    private void viewReviewsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewReviewsButtonActionPerformed
+        if (currentUser != null) {
+                mainFrame.showReviewsPanel(currentUser);
+            }
+    }//GEN-LAST:event_viewReviewsButtonActionPerformed
+
+    private void viewSuggestionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewSuggestionsButtonActionPerformed
+        JOptionPane.showMessageDialog(this, "Metodo en construccion",
+                    "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+    }//GEN-LAST:event_viewSuggestionsButtonActionPerformed
+
+    private void homeButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButonActionPerformed
+        mainFrame.showPanel("HOME_PANEL");
+    }//GEN-LAST:event_homeButonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

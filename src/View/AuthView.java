@@ -2,7 +2,9 @@ package View;
 
 import Model.User;
 
+//Esta interface me va a ayudar en las vistas
 public interface AuthView {
+    
 
     //En caso de error muestro un mensaje de error
     void showErrorMessage(String message);

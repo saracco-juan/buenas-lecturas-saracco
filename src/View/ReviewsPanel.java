@@ -16,7 +16,7 @@ import javax.swing.*;
  */
 public class ReviewsPanel extends JPanel {
 
-    private Frame mainFrame;
+    private final Frame mainFrame;
     
     
     public ReviewsPanel(Frame mainFrame) {
