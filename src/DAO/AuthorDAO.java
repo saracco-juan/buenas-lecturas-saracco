@@ -26,13 +26,13 @@ public class AuthorDAO {
         return apiClient.getAsync(url)
                 .thenApply(jsonBody -> {
                     if (jsonBody == null){
-                        System.out.println("ERRO: El JsonBody es NULL (FindAuthorNameByKey)");
+                        System.out.println("ERROR: El JsonBody es NULL (FindAuthorNameByKey)");
                         return "Desconocido";
                     }
                     try {
                         //Parseo el JSON
                         JsonNode authorNode = objectMapper.readTree(jsonBody);
-                        //El nombre está en el campo nam del nodo author"
+                        //El nombre esta en el campo name del authoNode
                         return authorNode.path("name").asText("Desconocido");
                     } catch (Exception e) {
                         e.printStackTrace();

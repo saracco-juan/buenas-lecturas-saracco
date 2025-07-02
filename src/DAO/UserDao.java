@@ -79,7 +79,7 @@ public class UserDao extends BaseDAO<User> {
             ps.setString(2, o.getEmail());
             ps.setString(3, o.getPassword());
 
-            //Actualizo el statement y lo ejecuta. Se utiliza executeUpdate ya que es uno de estos -> insert/update/delete.
+            //Actualizo el statement y lo ejecuto. Se utiliza executeUpdate ya que es uno de estos -> insert/update/delete.
             int rows = ps.executeUpdate();
 
             if(rows > 0){

@@ -70,20 +70,21 @@ public class ReviewDAO extends BaseDAO<Review> {
 
     @Override
     public Response<Review> delete(int id) {
-        //Metodo para eliminar una review de la BBDD
-        String sql = "DELETE FROM REVIEWS WHERE ID = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            int rows = ps.executeUpdate();
-            if (rows > 0) {
-                return new Response<>("Reseña eliminada correctamente.", "200", true, null);
-            } else {
-                return new Response<>("No se encontró la reseña a eliminar.", "404", false, null);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return new Response<>("Error SQL al eliminar la reseña: " + e.getMessage(), "500", false, null);
-        }
+//        //Metodo para eliminar una review de la BBDD
+//        String sql = "DELETE FROM REVIEWS WHERE ID = ?";
+//        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setInt(1, id);
+//            int rows = ps.executeUpdate();
+//            if (rows > 0) {
+//                return new Response<>("Reseña eliminada correctamente.", "200", true, null);
+//            } else {
+//                return new Response<>("No se encontró la reseña a eliminar.", "404", false, null);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return new Response<>("Error SQL al eliminar la reseña: " + e.getMessage(), "500", false, null);
+//        }
+        return null;
     }
 
     @Override

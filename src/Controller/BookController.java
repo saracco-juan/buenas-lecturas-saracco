@@ -34,7 +34,7 @@ public class BookController {
 
         //Validacion
         if (query == null || query.trim().isEmpty()) {
-            view.showErrorMessage("El campo de búsqueda no puede estar vacío.");
+            view.showErrorMessage("El campo de busqueda no puede estar vacio.");
             return;
         }
 
@@ -53,7 +53,7 @@ public class BookController {
 
         //Primero valido que hay un usuario en la sesion (logged in user)
         if (loggedInUser == null) {
-            view.showErrorMessage("Error: No hay un usuario activo para realizar esta acción.");
+            view.showErrorMessage("Error: No hay un usuario activo para realizar esta accion.");
             return;
         }
 

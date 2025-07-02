@@ -14,7 +14,7 @@ public class APIClient {
 
     //Este metodo realiza una peticion GET de forma asincrona, es decir no bloquea el programa mientras espera la repsuesta de la red
     //Recibe por parametro la url completa a la que hara la peticion GET
-    //El objeto "CompletableFuture" es una promesa de que un resultado estara disponible en el futuro, se puede leer como "Completable a Futuro"
+    //El objeto "CompletableFuture" es una promesa de que un resultado estara disponible en el futuro, se puede pensar como "Completable a Futuro"
     public CompletableFuture<String> getAsync(String url) {
 
         //Este objeto representa lo que voy a enviar a la API

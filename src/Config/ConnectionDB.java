@@ -7,20 +7,20 @@ import java.sql.SQLException;
 //Clase que se encarga de la conexion a la BBDD
 public class ConnectionDB {
 
-    // Variables para establecer la conexion a la BBDD
+    //Variables para establecer la conexion a la BBDD
 
     private final String url = "jdbc:h2:~/test;DB_CLOSE_DELAY=-1";
     private final String driver_db = "org.h2.Driver";
     private final String username = "sa";
     private final String password = "";;
 
-    // Instancia unica (patron singleton)
+    //Instancia unica (patron singleton)
     private static ConnectionDB instance;
 
-    // Conexion a la BBDD utilizando la clase Connection
+    //Conexion a la BBDD utilizando la clase Connection
     private Connection conn;
 
-    // El constructor establece la conexion
+    //El constructor establece la conexion
     private ConnectionDB() throws SQLException, ClassNotFoundException {
         //Cargo el driver de JDBC a la conexion
         Class.forName(driver_db);
@@ -35,7 +35,7 @@ public class ConnectionDB {
         return this.conn;
     }
 
-    //Aplico el patron singleton
+    //Metodo statico correspondiente al patron singleton
     public static ConnectionDB getInstance() throws SQLException, ClassNotFoundException {
 
         //Si la instancia no existe o esta cerrada la creo
