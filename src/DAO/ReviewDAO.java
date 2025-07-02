@@ -70,62 +70,17 @@ public class ReviewDAO extends BaseDAO<Review> {
 
     @Override
     public Response<Review> delete(int id) {
-//        //Metodo para eliminar una review de la BBDD
-//        String sql = "DELETE FROM REVIEWS WHERE ID = ?";
-//        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-//            ps.setInt(1, id);
-//            int rows = ps.executeUpdate();
-//            if (rows > 0) {
-//                return new Response<>("Reseña eliminada correctamente.", "200", true, null);
-//            } else {
-//                return new Response<>("No se encontró la reseña a eliminar.", "404", false, null);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return new Response<>("Error SQL al eliminar la reseña: " + e.getMessage(), "500", false, null);
-//        }
         return null;
     }
 
     @Override
     public Response<Review> read(int id) {
-//        //Implemente el read por ID para cumplir con ICrud
-//        String sql = "SELECT * FROM REVIEWS WHERE ID = ?";
-//        try(PreparedStatement ps = conn.prepareStatement(sql)) {
-//            ps.setInt(1, id);
-//            ResultSet rs = ps.executeQuery();
-//            if(rs.next()){
-//                Review review = buildReviewFromResultSet(rs);
-//                return new Response<>("Reseña encontrada", "200", true, review);
-//            } else {
-//                return new Response<>("Reseña no encontrada", "404", false, null);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return new Response<>("Error SQL al leer la reseña: " + e.getMessage(), "500", false, null);
-//        }
-
         return null;
     }
 
     @Override
     public Response<List<Review>> readAll() {
-//        //Implemente para cumplir con ICrud
-//        String sql = "SELECT * FROM REVIEWS";
-//        List<Review> reviews = new ArrayList<>();
-//        try(PreparedStatement ps = conn.prepareStatement(sql);
-//            ResultSet rs = ps.executeQuery()){
-//            while(rs.next()){
-//                reviews.add(buildReviewFromResultSet(rs));
-//            }
-//            return new Response<List<Review>>("Todas las reseñas recuperadas.", "200", true, reviews);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return new Response<>("Error SQL al leer todas las reseñas: " + e.getMessage(), "500", false, null);
-//        }
-
         return null;
-
     }
 
 

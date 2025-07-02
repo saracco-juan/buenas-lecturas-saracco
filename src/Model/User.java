@@ -16,6 +16,7 @@ public class User {
     private ArrayList<Book> wantToRead;
     private ArrayList<Book> suggestions;
 
+    //Constructor
     public User(int id, String name, String email, String password) {
         this.id = id;
         this.name = name;

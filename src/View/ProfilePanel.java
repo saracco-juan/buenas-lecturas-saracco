@@ -272,6 +272,11 @@ public class ProfilePanel extends javax.swing.JPanel {
         loggoutButton.setBackground(new java.awt.Color(255, 243, 232));
         loggoutButton.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         loggoutButton.setText("Cerrar Sesión");
+        loggoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loggoutButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -378,6 +383,12 @@ public class ProfilePanel extends javax.swing.JPanel {
     private void homeButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButonActionPerformed
         mainFrame.showPanel("HOME_PANEL");
     }//GEN-LAST:event_homeButonActionPerformed
+
+    private void loggoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loggoutButtonActionPerformed
+                JOptionPane.showMessageDialog(this, "Metodo en construccion",
+                    "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+    }//GEN-LAST:event_loggoutButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

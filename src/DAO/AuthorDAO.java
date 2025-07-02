@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.concurrent.CompletableFuture;
 
-//Chequear, es correcto tener todo lo de autor menos el modelo?
+//Chequear, es correcto tener todo lo de autorDAO sin modelo author?
 public class AuthorDAO {
 
     private final APIClient apiClient;
