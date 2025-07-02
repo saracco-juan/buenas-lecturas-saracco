@@ -8,9 +8,8 @@ import java.awt.CardLayout;
 import java.util.List;
 import javax.swing.JFrame;
 
-//Mi clase Frame utiliza la interfaz AuthView que tiene 
-//3 metodos que ayudan al flujo de las vistas
-public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
+//Mi clase Frame utiliza la interfaz AuthView que tiene metodos que ayudan a manejar las vistas
+public class Frame extends JFrame implements AuthView, HomeView{
 
     //El card layout es el que se encarga de manejar las vistas
     private final CardLayout cardLayout;
@@ -24,7 +23,8 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     private HomePanel homePanel;
     private ProfilePanel profilePanel;
     private ReviewsPanel reviewsPanel;
-    
+
+    //Controladores
     private BookController bookController;
     private final UserController userController;
 
@@ -36,9 +36,11 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
 
         initComponents();
 
-        //Configuracion básica del JFrame
+        //Configuro el Jframe
         setTitle("Buenas Lecturas");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //pack();
+        setLocationRelativeTo(null); // Centra la ventana
 
         //Estableci el CardLayout en el Content Pane del Frame
         cardLayout = new CardLayout();
@@ -50,7 +52,6 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
         homePanel = new HomePanel(this, userController, bookController);
         profilePanel = new ProfilePanel(this);
         reviewsPanel = new ReviewsPanel(this);
-        
         profilePanel.setController(bookController);
 
         //Añadi los paneles al contentPane
@@ -60,10 +61,7 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
         getContentPane().add(profilePanel, "PROFILE_PANEL");
         getContentPane().add(reviewsPanel, "REVIEWS_PANEL");
 
-        // --- 5. Ajustar el tamaño del Frame y hacerlo visible ---
-        pack(); // Ajusta el tamaño del Frame al tamaño preferido de sus componentes.
-        setLocationRelativeTo(null); // Centra la ventana.
-        
+        //Lo primero que muestro es el login panel
          cardLayout.show(getContentPane(), "LOGIN_PANEL");
     }
     
@@ -98,17 +96,16 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     @Override
     public void navigateToHome(User user) {
         //SYSO de test
-        System.out.println("Navegando a la pantalla principal para el usuario: " + user.getName());
+        //System.out.println("Navegando a la pantalla principal para el usuario: " + user.getName());
         
-        // 1. GUARDA EL USUARIO EN EL FRAME
+        //Guardo el usuario en el frame
          this.loggedInUser = user;
          
-        // 2. Notifica a los controladores quién es el usuario activo
+        //Notifico a los controladores el usuario activo
         this.userController.setLoggedInUser(this.loggedInUser);
         this.bookController.setLoggedInUser(this.loggedInUser);
     
-         // 3. PASA EL USUARIO AL HOMEPANEL
-         //    Ahora que tenemos el usuario, se lo damos al panel que lo necesita.
+         //Le seto el user a los paneles
          homePanel.setCurrentUser(this.loggedInUser);
          profilePanel.setCurrentUser(this.loggedInUser);
         
@@ -118,7 +115,7 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     
     @Override
     public void displaySearchResults(List<Book> books) {
-       // El Frame recibe la orden, pero se la pasa al panel correcto.
+       //El Frame recibe la orden y se la pasa al panel correcto
         if (homePanel != null) {
             homePanel.updateResultsList(books);
         }
@@ -126,13 +123,12 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
     
     @Override
     public void refreshProfileView(User updatedUser) {
-        System.out.println("Frame: Recibida orden para refrescar la vista del perfil.");
-        
-        // 1. Actualizamos la copia del usuario en el Frame. ¡MUY IMPORTANTE!
+        //System.out.println("Frame: orden para refrescar el perfil recibida");
+
+        //Updateo el user
         this.loggedInUser = updatedUser;
         
-        // 2. Le decimos al ProfilePanel que se redibuje con la nueva información.
-        //    Reusamos el método que creamos para esto.
+        //Le digo al ProfilePanel que se reenderice con la nueva info
         if (profilePanel != null) {
             profilePanel.refreshView(updatedUser);
         }
@@ -147,11 +143,7 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
         this.showPanel("LOGIN_PANEL");
     }
     
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -172,8 +164,6 @@ public class Frame extends javax.swing.JFrame implements AuthView, HomeView{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

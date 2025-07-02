@@ -14,27 +14,28 @@ public class UserController {
     private final UserService userService;
     //Genero la dependencai del autentificador de user
     private AuthView view;
+    //Guardo el usuario que esta logeado
     private User loggedInUser;
 
-    // El Frame principal llamará a este método después de un login exitoso.
+
     public void setLoggedInUser(User user) {
         this.loggedInUser = user;
     }
 
-    //Recibo la dependecia en el constructor y la seteo
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    //Este metodo para que el Frame le diga al controlador quien es su vista
     public void setView(AuthView view) {
+        //Este metodo para que el Frame le diga al controlador quien es su vista
         this.view = view;
     }
 
-    //Recibe datos para login por parametro (que van a ser enviados desde la vista)
     public void handleLogin(String email, String password) {
+        //Recibe datos para login por parametro (que van a ser enviados desde la vista)
 
-        //Pequeña validacion para datos nulos
+
+        //Pequeña validacion para datos nulos (Logica de negocio)
         if(email == null || email.isEmpty() ) {
 
             System.out.println("Error: El email no puede ser nulo.");
@@ -46,10 +47,10 @@ public class UserController {
             return;
         }
 
-        //Instancio el objeto response para darle uso, le seto la response del metodo login servicio
+        //Instancio el objeto response para darle uso, le seteo la response del metodo login servicio
         Response<User> loginResponse = userService.login(email, password);
 
-        //Si tuve exito (true), envio un mensaje y navego a la vista. Sino, muestro el error viceversa
+        //Si tuve exito (true), envio un mensaje y navego a la vista. Sino, muestro el error y viceversa
         if(loginResponse.getStatus()){
 
             //System.out.println("Login exitoso. Bienvenido " +  loginResponse.getObj().getName());
@@ -61,9 +62,11 @@ public class UserController {
 
     }
 
-    //Recibe datos para el registro por parametro (que van a ser enviados desde la vista)
     public void handleRegister(String name, String email, String password) {
+        //Recibe datos para el registro por parametro (que van a ser enviados desde la vista)
 
+
+        //Logica de negocio
         if(email == null || email.isEmpty() ) {
             System.out.println("Error: El email no puede ser nulo.");
             return;
@@ -75,13 +78,14 @@ public class UserController {
             return;
         }
 
-        //Instancio el objeto response para darle uso, le seto la response del metodo login servicio
+        //Instancio el objeto response para darle uso, le seteo la response del metodo register del servicio
         Response<User> registerResponse = userService.register(name, email, password);
 
         //Si tuve exito (true), envio un mensaje y navego a la vista. Sino muestro un error
         if(registerResponse.getStatus()){
             //System.out.println("Register exitoso. Bienvenido " +  registerResponse.getObj().getName());
             view.showSuccessMessage(registerResponse.getMessage());
+            //Le paso el usuario que se logeo a la vista
             view.navigateToLogin(registerResponse.getObj());
         }else{
             //System.out.println("Error de registro: " +  registerResponse.getMessage());
@@ -92,44 +96,25 @@ public class UserController {
 
     public void addBookToWhishlist(User user, Book book) {
 
-        System.out.println("2. UserController recibió la orden de añadir '" + book.getName() + "' a la lista.");
-
+        //Ejecuto el metodo para añadir un libro a la lista de quiero leer del servico
         Response<User> response = userService.addBookToWishlist(user, book);
 
-        System.out.println("4. Controlador recibió respuesta del servicio. Estado: " + response.getStatus());
-
-//        if(response.getStatus()){
-//            ((AuthView) view).showSuccessMessage(response.getMessage());
-//        }else{
-//            ((AuthView) view).showErrorMessage(response.getMessage());
-//        }
-
         if (response.getStatus()) {
-            // --- INICIO DE LOS CAMBIOS ---
 
-            // 1. ACTUALIZAR EL MODELO EN MEMORIA
-            //    El objeto 'user' que tenemos aquí es el original, no el actualizado.
-            //    La forma más segura es añadir el libro directamente al 'loggedInUser' del controlador.
-            //    Si tu método de servicio devuelve el User actualizado en response.getData(), sería aún mejor.
-            //    Por ahora, lo añadimos manualmente.
             if (this.loggedInUser != null) {
+                //Si fue true, accedo al usuario logeado y le agrego el libro
                 this.loggedInUser.getWantToRead().add(book);
             }
 
-            // 2. NOTIFICAR A LA VISTA QUE SE REFRESQUE
-            //    Llamamos al mismo método que usamos para eliminar, para que el ProfilePanel se actualice.
-            //    Necesitamos castear 'view' a 'HomeView' para acceder a este método.
             if (view instanceof HomeView) {
+                //Refresco la vista
                 ((HomeView) view).refreshProfileView(this.loggedInUser);
             }
 
-            // --- FIN DE LOS CAMBIOS ---
-
-            // Mostramos el mensaje de éxito al final.
-            ((AuthView) view).showSuccessMessage(response.getMessage());
+            (view).showSuccessMessage(response.getMessage());
 
         } else {
-            ((AuthView) view).showErrorMessage(response.getMessage());
+            (view).showErrorMessage(response.getMessage());
         }
 
     }

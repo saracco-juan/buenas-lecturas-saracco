@@ -18,13 +18,15 @@ public abstract class BaseDAO<T> implements ICrud<T>{
     //Conexion a la BBDD
     protected  Connection conn;
 
-    //Con este metodo recibe la conexion por paramentro y la setea
     public BaseDAO(Connection conn) {
+        //Con este metodo recibe la conexion por paramentro y la setea
+
         this.conn = conn;
     }
 
     //Metodos abstractos para operaciones CRUD que deben ser implementados por las clases hijas
     //Devuelvo la clase response que la diseñe para devolver una respuesta especializada para cada metodo
+
     @Override
     public abstract Response<T> create(T o);
 

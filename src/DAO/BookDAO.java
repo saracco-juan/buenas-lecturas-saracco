@@ -20,8 +20,8 @@ public class BookDAO {
     //Dependencia que me va a permitir interactuar con los autores
     private final AuthorDAO authorDAO;
 
-    //Al crear la clase, instancio el api client, el object mapper y el AuthorDAO
     public BookDAO() {
+        //Al crear la clase, instancio el api client, el object mapper y el AuthorDAO
         this.apiClient = new APIClient(); // Crea la instancia
         this.objectMapper = new ObjectMapper();
         this.authorDAO = new AuthorDAO();
@@ -29,8 +29,8 @@ public class BookDAO {
 
     //Ambos metodos devuleven una promesa de una lista de libros que se va a completar de forma asincrona
 
-    //Metodo para buscar libro, recibe el titulo del libro por parametro
     public CompletableFuture<List<Book>> searchByTitle(String title){
+        //Metodo para buscar libro, recibe el titulo del libro por parametro
 
         //Construyo la URL codificando el títul. Esto hace mas amigables las busquedas por URL
         String encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8);
@@ -95,8 +95,10 @@ public class BookDAO {
                });
     }
 
-    //Metodo para buscar libro, recive la "Key" por parametro
     public CompletableFuture<Book> findByKey(String key) {
+        //Metodo para buscar libro, recive la "Key" por parametro
+
+
         // La URL se construye a partir de la clave
         String url = "https://openlibrary.org" + key + ".json";
 

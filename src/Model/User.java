@@ -16,7 +16,6 @@ public class User {
     private ArrayList<Book> wantToRead;
     private ArrayList<Book> suggestions;
 
-    //Constructor
     public User(int id, String name, String email, String password) {
         this.id = id;
         this.name = name;
@@ -24,8 +23,9 @@ public class User {
         this.password = password;
     }
 
-    //Constructor sobrecarga (Asi construyo mi objeto en el metodo register del servicio)
     public User(String name, String email, String password) {
+        //Constructor sobrecarga (Asi construyo mi objeto en el metodo register del servicio)
+
         this.name = name;
         this.email = email;
         this.password = password;

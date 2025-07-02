@@ -13,8 +13,8 @@ import java.util.List;
 //Clase que hereda de baseDAO
 public class UserDao extends BaseDAO<User> {
 
-    //Accedo a la conexion a traves del constructor del padre
     public UserDao(Connection conn) {
+        //Accedo a la conexion a traves del constructor del padre
         super(conn);
     }
 

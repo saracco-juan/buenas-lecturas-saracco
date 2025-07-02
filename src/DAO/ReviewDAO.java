@@ -9,8 +9,8 @@ import java.util.List;
 //Clase que hereda de baseDAO
 public class ReviewDAO extends BaseDAO<Review> {
 
-    //Accedo a la conexion a traves del constructor del padre
     public ReviewDAO(Connection conn) {
+        //Accedo a la conexion a traves del constructor del padre
         super(conn);
     }
 

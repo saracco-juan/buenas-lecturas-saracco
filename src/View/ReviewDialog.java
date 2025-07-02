@@ -8,13 +8,14 @@ package View;
 import Controller.BookController;
 import Model.Book;
 import Model.Review;
-import javax.swing.JOptionPane;
+
+import javax.swing.*;
 
 /**
  *
  * @author Juan
  */
-public class ReviewDialog extends javax.swing.JDialog {
+public class ReviewDialog extends JDialog {
 
     
     private final Book book;
@@ -22,43 +23,39 @@ public class ReviewDialog extends javax.swing.JDialog {
     
     
     public ReviewDialog(java.awt.Frame parent, Book book, BookController bookController) {
-    super(parent, true); // true para hacerlo modal
-    this.book = book;
-    this.bookController = bookController;
+        super(parent, true); // true para hacerlo modal
+        this.book = book;
+        this.bookController = bookController;
     
-    initComponents(); // Esta línea ya existe
+        initComponents();
     
-    this.setTitle("Reseña para: " + book.getName());
-    populateData(); // Llena el formulario con datos existentes si los hay
-    setLocationRelativeTo(parent); // Centra el diálogo
-}
-    
-    // Pega estos métodos en tu clase
-
-// Si el libro ya tiene una reseña, la cargamos en el formulario
-private void populateData() {
-    Review existingReview = book.getReview();
-    if (existingReview != null) {
-        ratingSlider.setValue(existingReview.getRating());
-        commentTextArea.setText(existingReview.getComment());
-    }
-}
-
-private void saveReview() {
-    int rating = ratingSlider.getValue();
-    String comment = commentTextArea.getText();
-
-    if (comment == null || comment.trim().isEmpty()) {
-        JOptionPane.showMessageDialog(this, "El comentario no puede estar vacío.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-        return;
+        this.setTitle("Reseña para: " + book.getName());
+        populateData();
+        setLocationRelativeTo(parent);
     }
 
-    // Llamamos al método del controlador que ya hemos creado
-    bookController.saveReview(book, rating, comment);
+    private void populateData() {
+        Review existingReview = book.getReview();
 
-    // Cerramos el diálogo
-    dispose();
-}
+        if (existingReview != null) {
+            ratingSlider.setValue(existingReview.getRating());
+            commentTextArea.setText(existingReview.getComment());
+        }
+    }
+
+    private void saveReview() {
+        int rating = ratingSlider.getValue();
+        String comment = commentTextArea.getText();
+
+        if (comment == null || comment.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El comentario no puede estar vacío.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        bookController.saveReview(book, rating, comment);
+
+        dispose();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

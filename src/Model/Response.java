@@ -12,22 +12,24 @@ public class Response<T> {
     private List<T> list;
     private T obj;
 
-    //Constructor por defecto
     public Response(String message, String code, boolean status) {
+        //Constructor por defecto
+
         this.message = message;
         this.code = code;
         this.status = status;
     }
 
-    //Constructor por defecto que ademas contiene una lista
     public Response(String message, String code, boolean status, List<T> list) {
+        //Constructor por defecto que ademas contiene una lista
+
         this.message = message;
         this.code = code;
         this.status = status;
         this.list = list;
     }
-    //Constructor por defecto que ademas contiene un objeto
     public Response(String message, String code, boolean status,  T obj) {
+        //Constructor por defecto que ademas contiene un objeto
         this.message = message;
         this.code = code;
         this.status = status;

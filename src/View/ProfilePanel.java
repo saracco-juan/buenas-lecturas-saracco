@@ -26,37 +26,32 @@ public class ProfilePanel extends javax.swing.JPanel {
     public ProfilePanel(Frame mainFrame) {
         initComponents();
         initListeners();
-        
         this.mainFrame = mainFrame;
     }
-    
-    // 3. MÉTODO PARA INICIALIZAR LOS LISTENERS DE LOS BOTONES
-    private void initListeners() {
-    // --- TUS LISTENERS EXISTENTES ---
-   markAsReadButon.addActionListener(e -> {
-    // 1. Obtener el libro seleccionado de la lista "Quiero Leer"
-    Book selectedBook = wishlistList.getSelectedValue();
 
-    // 2. Validar que se haya seleccionado un libro
-    if (selectedBook == null) {
-        JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de la lista 'Quiero Leer'.", "Ningún libro seleccionado", JOptionPane.WARNING_MESSAGE);
-        return; // Detiene la ejecución si no hay nada seleccionado
-    }
-    
-    // 3. Llamar al método del controlador para mover el libro
-    if (bookController != null) {
-        bookController.moveBookToReadList(selectedBook);
-    }
-});
+    private void initListeners() {
+
+        markAsReadButon.addActionListener(e -> {
+
+            Book selectedBook = wishlistList.getSelectedValue();
+
+            if (selectedBook == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de la lista 'Quiero Leer'.",
+                    "Ningún libro seleccionado", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (bookController != null) {
+                bookController.moveBookToReadList(selectedBook);
+            }
+        });
+
     deleteButon.addActionListener(e -> handleDeleteBook());
     homeButon.addActionListener(e -> mainFrame.showPanel("HOME_PANEL"));
 
-    // --- LÓGICA DE LOS BOTONES DE RESEÑA ---
-    
-    // Acción para el botón "Añadir Reseña"
+
     addReviewButton.addActionListener(e -> handleReviewAction()); // Suponiendo que tu botón se llama addReviewButton
 
-    // Acción para el nuevo botón "Ver Reseñas"
     viewReviewsButton.addActionListener(e -> {
         if (currentUser != null) {
             mainFrame.showReviewsPanel(currentUser);
@@ -64,77 +59,60 @@ public class ProfilePanel extends javax.swing.JPanel {
         }
     });
 
-    // --- LÓGICA DE SELECCIÓN DE LISTAS ---
-    
-    // Cuando se selecciona algo en "Quiero Leer"
-    wishlistList.addListSelectionListener(e -> {
-        if (!e.getValueIsAdjusting()) {
-            boolean isSelected = wishlistList.getSelectedIndex() != -1;
-            markAsReadButon.setEnabled(isSelected);
-            if (isSelected) {
-                readlistList.clearSelection();
-                addReviewButton.setEnabled(false); // Desactivar botón de reseña
-            }
-        }
-    });
+
 
     // Cuando se selecciona algo en "Leídos"
     readlistList.addListSelectionListener(e -> {
         if (!e.getValueIsAdjusting()) {
             boolean isSelected = readlistList.getSelectedIndex() != -1;
-            addReviewButton.setEnabled(isSelected); // Activar botón de reseña
+            addReviewButton.setEnabled(isSelected);
             if (isSelected) {
                 wishlistList.clearSelection();
-                markAsReadButon.setEnabled(false); // Desactivar botón de mover
+                markAsReadButon.setEnabled(false);
             }
         }
     });
 
-    // --- ESTADO INICIAL DE LOS BOTONES ---
     markAsReadButon.setEnabled(false);
-    addReviewButton.setEnabled(false); // El botón de reseña empieza desactivado
+    addReviewButton.setEnabled(false);
 }
     
     private void handleReviewAction() {
-    Book selectedBook = readlistList.getSelectedValue();
-    if (selectedBook == null) {
-        JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de la lista 'Leídos'.", "Error", JOptionPane.WARNING_MESSAGE);
-        return;
+        Book selectedBook = readlistList.getSelectedValue();
+        if (selectedBook == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de la lista 'Leídos'.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        ReviewDialog reviewDialog = new ReviewDialog(mainFrame, selectedBook, bookController);
+        reviewDialog.setVisible(true);
     }
-    ReviewDialog reviewDialog = new ReviewDialog(mainFrame, selectedBook, bookController);
-    reviewDialog.setVisible(true);
-}
     
-        // 4. LÓGICA DEL EVENTO DE ELIMINACIÓN
+
     private void handleDeleteBook() {
         Book selectedBook = null;
         String listType = null;
 
-        // Comprobamos primero si hay algo seleccionado en la lista "Quiero Leer"
         if (wishlistList.getSelectedValue() != null) {
             selectedBook = wishlistList.getSelectedValue();
             listType = "WANT_TO_READ";
         } 
-        // Si no, comprobamos la lista "Leídos"
         else if (readlistList.getSelectedValue() != null) {
             selectedBook = readlistList.getSelectedValue();
             listType = "READ";
         }
 
-        // Si después de comprobar ambas listas, no hay nada seleccionado, mostramos un error.
         if (selectedBook == null) {
             JOptionPane.showMessageDialog(this, "Por favor, selecciona un libro de alguna de las listas para eliminar.", "Ningún libro seleccionado", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Pedimos confirmación al usuario
-        int choice = JOptionPane.showConfirmDialog(this, 
+        int choice = JOptionPane.showConfirmDialog(this,
             "¿Estás seguro de que quieres eliminar \"" + selectedBook.getName() + "\" de tu lista?",
             "Confirmar eliminación",
             JOptionPane.YES_NO_OPTION);
 
         if (choice == JOptionPane.YES_OPTION) {
-            // Llamamos al controlador con los datos correctos
             if (bookController != null) {
                 bookController.removeBookFromList(selectedBook, listType);
             } else {
@@ -145,33 +123,27 @@ public class ProfilePanel extends javax.swing.JPanel {
     }
     
     public void refreshView(User updatedUser) {
-    // Paso A: Actualiza la variable interna del panel con los nuevos datos.
-    this.currentUser = updatedUser;
+
+        this.currentUser = updatedUser;
     
-    // Paso B: Llama a tu método privado existente para que redibuje todo.
-    updateProfileDisplay();
+
+        updateProfileDisplay();
     }
     
-    // El Frame usará este método para darnos una instancia del controlador.
+
     public void setController(BookController bookController) {
         this.bookController = bookController;
     }
     
     public void setCurrentUser(User user) {
         this.currentUser = user;
-        // Actualiza la UI con los datos del usuario
         userName.setText("Perfil de: " + user.getName());
         updateProfileDisplay();
     }
-    
-     /**
-     * Método centralizado para actualizar todos los componentes del perfil.
-     */
+
     private void updateProfileDisplay() {
         if (currentUser == null) {
-            // Caso de seguridad por si algo falla.
             userName.setText("Perfil de: Invitado");
-            // Limpiar listas si es necesario
             updateBookList(wishlistList, null);
             updateBookList(readlistList, null);
             return;
@@ -190,11 +162,7 @@ public class ProfilePanel extends javax.swing.JPanel {
         // ...
     }
     
-    /**
-     * Un método de utilidad reutilizable para poblar cualquier JList de libros.
-     * @param listComponent El JList que se va a actualizar.
-     * @param books La lista de libros a mostrar.
-     */
+
     private void updateBookList(javax.swing.JList<Book> listComponent, List<Book> books) {
         DefaultListModel<Book> model = new DefaultListModel<>();
         if (books != null && !books.isEmpty()) {

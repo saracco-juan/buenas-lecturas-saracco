@@ -7,32 +7,32 @@ package View;
 
 import Model.Book;
 import Model.User;
-import javax.swing.DefaultListModel;
+
+import javax.swing.*;
 
 /**
  *
  * @author Juan
  */
-public class ReviewsPanel extends javax.swing.JPanel {
+public class ReviewsPanel extends JPanel {
 
     private Frame mainFrame;
     
     
     public ReviewsPanel(Frame mainFrame) {
-    this.mainFrame = mainFrame;
-    initComponents();
+        this.mainFrame = mainFrame;
+        initComponents();
     
-    reviewsList.setFixedCellHeight(-1);
+        reviewsList.setFixedCellHeight(-1);
     
-    // Aquí le decimos a nuestra nueva JList que use el renderer visual
-    reviewsList.setCellRenderer(new BookReview());
-}
+        reviewsList.setCellRenderer(new BookReview());
+    }
     
     public void displayReviews(User user) {
-    DefaultListModel<Book> model = new DefaultListModel<>();
-    if (user != null && user.getReadBooks() != null) {
-        for (Book book : user.getReadBooks()) {
-            // MUY IMPORTANTE: Solo añadimos libros que SÍ tienen una reseña
+        DefaultListModel<Book> model = new DefaultListModel<>();
+        if (user != null && user.getReadBooks() != null) {
+            for (Book book : user.getReadBooks()) {
+
             if (book.getReview() != null) {
                 model.addElement(book);
             }

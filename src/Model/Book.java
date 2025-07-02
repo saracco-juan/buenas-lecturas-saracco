@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.Date;
-import Enum.Genre;
 
 public class Book {
 
@@ -9,7 +7,6 @@ public class Book {
     private String workId;
     private String name;
     private String authorName;
-
     private Review review;
 
     //Constructor
@@ -18,7 +15,6 @@ public class Book {
         this.name = name;
         this.authorName = authorName;
     }
-
 
     public Review getReview() {
         return review;
@@ -53,15 +49,17 @@ public class Book {
     }
 
 
-    //Metodo toString para visualizar el objeto
     @Override
     public String toString() {
+        //Metodo toString para visualizar el objeto
+
         return this.getName() + " - " + this.getAuthorName(); // opcion para ver el ISBN -> + " - " + this.getWorkId();
     }
 
-    //Este metodo define cuando objetos se consideran iguales ("this" vs "o" pasado por parametro)
     @Override
     public boolean equals(Object o) {
+        //Este metodo define cuando objetos se consideran iguales ("this" vs "o" pasado por parametro)
+
         //Si son iguales retorno true
         if (this == o) return true;
         //Si o es null o no es el del tipo Book (this.getClass), retorno false
@@ -71,9 +69,9 @@ public class Book {
         return java.util.Objects.equals(getWorkId(), book.getWorkId());
     }
 
-    //Este metodo genera un hashCode basado en WorkId (ISBN)
     @Override
     public int hashCode() {
+        //Este metodo genera un hashCode basado en WorkId (ISBN)
         return java.util.Objects.hash(getWorkId());
     }
 }

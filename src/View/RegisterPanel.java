@@ -7,17 +7,19 @@ package View;
 
 import Controller.UserController;
 
+import javax.swing.*;
+
 /**
  *
  * @author Juan
  */
-public class RegisterPanel extends javax.swing.JPanel {
+public class RegisterPanel extends JPanel {
 
-    //Dependencias con el main frame y el user controller
+    //Dependencias
     private final Frame mainFrame;
     private final UserController userController;
     
-   //Constructor del panel
+   //Constructor
     public RegisterPanel(Frame mainFrame, UserController userController) {
         initComponents();
         this.mainFrame = mainFrame;

@@ -17,8 +17,9 @@ public class AuthorDAO {
         this.objectMapper = new ObjectMapper();
     }
 
-    //Metodo para buscar el nombre de un author a traves de su key
     public CompletableFuture<String> findAuthorNameByKey(String authorKey) {
+        //Metodo para buscar el nombre de un author a traves de su key
+
         //Armo la url ---> (se podria mejorar con encode?)
         String url = "https://openlibrary.org" + authorKey + ".json";
         //Ejecuto la peticion

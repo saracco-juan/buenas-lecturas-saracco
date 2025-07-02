@@ -182,8 +182,4 @@ public class UserServiceImpl implements UserService {
     public Response<List<Book>> readSugestions(User user) {
         return null;
     }
-
-
-
-
 }

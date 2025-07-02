@@ -11,19 +11,19 @@ import Model.Book;
 import Model.User;
 import java.awt.event.ActionEvent;
 import java.util.List;
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
-/**
- *
- * @author Juan
- */
-public class HomePanel extends javax.swing.JPanel {
 
-   //Dependencias con el main frame y el user controller
+public class HomePanel extends JPanel {
+
+   //Dependencias con el main frame
    private Frame mainFrame;
+
+   //Dependencia a los controladores
    private UserController userController;
    private BookController bookController;
+
+   //Seteo el usuario
    private User currentUser;
    
    //Constructor del panel
@@ -34,14 +34,14 @@ public class HomePanel extends javax.swing.JPanel {
         this.mainFrame = mainFrame;
         this.userController = userController;
         this.bookController = bookController;
-        
-        // --- INICIALIZACIÓN DEL MODELO DE LA LISTA ---
-        // Crea un modelo de lista que contendrá objetos Book.
+
+        //Creo un modelo de lista que va a tener objetos de tipo Book
         DefaultListModel<Book> initialModel = new DefaultListModel<>();
         
-        // Asigna este modelo a tu JList.
+        //Asigna el modelo a resultsList
         resultsList.setModel(initialModel);
-        
+
+
         searchButon.addActionListener( new java.awt.event.ActionListener() {
            
             @Override
@@ -51,57 +51,53 @@ public class HomePanel extends javax.swing.JPanel {
             
         });
         
-        // Habilitar/deshabilitar el botón según la selección en la lista
+        //Habilito o deshabilito el boton segun la selección en la lista
         resultsList.addListSelectionListener(e -> {
-            // Se habilita el botón solo si algo está seleccionado
+
+            //Habilito el botOn solo si algo estA seleccionado
             addToWhishlistButon.setEnabled(!resultsList.isSelectionEmpty());
         });
      
-        // Acción para el botón "Añadir a Quiero Leer"
+        //Accion para el boton de "Añadir a Quiero Leer"
         addToWhishlistButon.addActionListener(e -> {
             
-            System.out.println("1. Clic en 'Añadir a Quiero Leer' detectado.");
+            //System.out.println("Clic en boton "Añadir a Quiero" Leer detectado");
             
-            // Obtenemos el libro seleccionado de la lista
+            //Obtengo el libro seleccionado de la lista
             Book selectedBook = resultsList.getSelectedValue();
             
-            // Verifiquemos si los objetos son nulos
-            System.out.println("   - Libro seleccionado: " + (selectedBook != null ? selectedBook.getName() : "null"));
-            System.out.println("   - Usuario actual: " + (currentUser != null ? currentUser.getName() : "null"));
+            //Debug
+            //System.out.println("Libro seleccionado: " + (selectedBook != null ? selectedBook.getName() : "null"));
+            //System.out.println("Usuario actual: " + (currentUser != null ? currentUser.getName() : "null"));
     
             if (selectedBook != null && currentUser != null) {
-                // Llamamos al controlador de usuario para que haga el trabajo
-                System.out.println("   - Llamando al controlador...");
+
+                //Llamo al controlador de usuario
                 userController.addBookToWhishlist(currentUser, selectedBook);
             }else{
-                System.err.println("   - ¡ERROR! El libro o el usuario es null. No se puede continuar.");
+                System.err.println(" ERROR: El libro o el usuario es null");
             }
         });
         
         profileButon.addActionListener(e -> {
-        mainFrame.showPanel("PROFILE_PANEL");
-    });
+          mainFrame.showPanel("PROFILE_PANEL");
+        });
         
     }
     
     //Seteo el usuario que esta utilizando la aplicacion
     public void setCurrentUser(User user) {
         this.currentUser = user;
-        // Opcional: puedes actualizar una etiqueta para que diga "Bienvenido, Juan"
-        // lblWelcome.setText("Bienvenido, " + this.currentUser.getName());
     }
     
     private void handleSearchClick(){
-        
-        System.out.println("1. Clic en el botón de búsqueda detectado.");
+
         String query = buscarLibro.getText();
-        System.out.println("   - Término de búsqueda: '" + query + "'"); // <-- AÑADE ESTO
 
         bookController.handleSearch(query);
     }
     
      public void showErrorMessage(String message) {
-        // El propio panel muestra el popup de error.
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
      
@@ -109,38 +105,19 @@ public class HomePanel extends javax.swing.JPanel {
 
 
   public void updateResultsList(List<Book> books) {
-    System.out.println("7. Dentro de updateResultsList. Actualizando el modelo con " + books.size() + " libros.");
 
-    // CREAMOS UN MODELO NUEVO CADA VEZ. Es más simple y seguro.
-    DefaultListModel<Book> newModel = new DefaultListModel<>();
+      DefaultListModel<Book> newModel = new DefaultListModel<>();
 
-    if (books != null && !books.isEmpty()) {
-        // Llenamos el nuevo modelo con los libros.
-        for (Book book : books) {
-            newModel.addElement(book);
-        }
-    } else {
-        // Para manejar el caso sin resultados, podríamos añadir un mensaje,
-        // pero como el modelo es de <Book>, no podemos. Lo dejamos vacío.
-        // Opcional: podrías mostrar un JLabel aparte con el mensaje "No se encontraron resultados".
-    }
+      if (books != null && !books.isEmpty()) {
+          for (Book book : books) {
+              newModel.addElement(book);
+          }
+      }
 
-    // ASIGNAMOS EL NUEVO MODELO al JList.
-    // Esto notificará automáticamente al JList que debe redibujarse.
-    resultsList.setModel(newModel);
-    
-    // Opcional, como "seguro de vida" para forzar el repintado.
-    // resultsList.revalidate();
-    // resultsList.repaint();
+      resultsList.setModel(newModel);
+  }
 
-    System.out.println("8. Modelo asignado al JList.");
-    }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
