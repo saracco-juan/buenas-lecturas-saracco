@@ -54,3 +54,8 @@ CREATE TABLE REVIEWS (
    https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.17.0/
 
    Descargar la version 2.17.0.jar de los tres y repetir el paso 5 para añadirlas.
+
+10. En caso de que no haya funcionado, agregue el ejecutable .jar. Navegar hasta la carpeta del proyecto out > artifacts y ejecutar el comando java -jar BuenasLecturas-Saracco.jar
+    El proyecto se deberia ejecutar correctamente.
+
+    Saludos!
